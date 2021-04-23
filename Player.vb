@@ -26,7 +26,7 @@
         Me.MainRect = MainRect
         _x = MainRect.Width / 2 - 45
         _y = MainRect.Height / 2 - 45
-        _maxSpeed = 1
+        _maxSpeed = 1.5
         Direction = 18
         moving = False
         Dim img As New Bitmap(My.Resources.playerwalking)
@@ -44,6 +44,7 @@
     Public Sub Show(G As Graphics)
 
         If visible Then
+            G.FillEllipse(New SolidBrush(Color.FromArgb(150, 0, 0, 0)), New RectangleF(CSng(_x + 15), CSng(_y + 45), 28, 14))
             G.DrawImage(CType(frame(direct), Image), CSng(_x), CSng(_y), 61, 64)
         End If
     End Sub
@@ -81,7 +82,7 @@
                 Direction = 9
             End If
         End If
-        If _speedY = 0 Or _speedX = 0 Then
+        If _speedY = 0 And _speedX = 0 Then
             moving = False
         End If
 

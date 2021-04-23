@@ -21,6 +21,7 @@
     End Sub
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        counter += 1
         If keysPressed.Contains(Keys.A) And Hero.speedX > -Hero.maxSpeed Then
             Hero.speedX -= 1
             Hero.moving = True
@@ -37,7 +38,7 @@
             Hero.speedY += 1
             Hero.moving = True
         End If
-        If counter Mod 1 = 0 And Hero.moving And Hero.Direction < 35 Then
+        If counter Mod 10 = 0 And Hero.moving Then
             Hero.Direction += 1
             Debug.WriteLine(Hero.Direction)
         End If

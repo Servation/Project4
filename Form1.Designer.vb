@@ -23,19 +23,8 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Me.imgPlayer = New System.Windows.Forms.PictureBox()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        CType(Me.imgPlayer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'imgPlayer
-        '
-        Me.imgPlayer.BackColor = System.Drawing.Color.Transparent
-        Me.imgPlayer.Location = New System.Drawing.Point(587, 505)
-        Me.imgPlayer.Name = "imgPlayer"
-        Me.imgPlayer.Size = New System.Drawing.Size(38, 40)
-        Me.imgPlayer.TabIndex = 0
-        Me.imgPlayer.TabStop = False
         '
         'Timer1
         '
@@ -48,14 +37,10 @@ Partial Class Form1
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackgroundImage = Global.Project4.My.Resources.Resources.grass
         Me.ClientSize = New System.Drawing.Size(1184, 1161)
-        Me.Controls.Add(Me.imgPlayer)
         Me.Name = "Form1"
         Me.Text = "Form1"
-        CType(Me.imgPlayer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
-
-    Friend WithEvents imgPlayer As PictureBox
     Friend WithEvents Timer1 As Timer
 End Class
