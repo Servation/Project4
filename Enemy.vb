@@ -1,14 +1,14 @@
-﻿Public Class Player
+﻿Public Class Enemy
     Public Property x As Double
     Public Property y As Double
     Public Property speedX As Decimal
     Public Property speedY As Decimal
     Public Property visible As Boolean
     Public Property moving As Boolean
-
     Public Property running As Boolean
-
     Public Property maxSpeed As Decimal
+    Public Property Timer As Integer
+    Public Property DirectionTime As Integer
     Private direct As Integer
 
     Public Property Direction As Integer
@@ -20,27 +20,27 @@
         End Set
     End Property
 
-    Private normalFrame(35) As Bitmap
+    Private frame(35) As Bitmap
 
     Private MainRect As Rectangle
 
     Sub New(MainRect As Rectangle)
         Me.MainRect = MainRect
-        _x = MainRect.Width / 2 - 45
-        _y = MainRect.Height / 2 - 45
-        _maxSpeed = 1.5
+        _x = 100
+        _y = 100
+        _maxSpeed = 2
         Direction = 18
         moving = False
         running = False
-        Dim img As New Bitmap(My.Resources.playerwalking)
+        Dim img As New Bitmap(My.Resources.zombie)
         _visible = True
         Dim bitY = 0
 
         For i As Integer = 0 To 35
-            normalFrame(i) = New Bitmap(61, 64)
-            Dim gr As Graphics = Graphics.FromImage(normalFrame(i))
-            Dim xPosition As Integer = (i Mod 9) * 63
-            gr.DrawImage(img, 0, 0, New RectangleF(xPosition, Int(i / 9) * 64, 61, 64), GraphicsUnit.Pixel)
+            frame(i) = New Bitmap(62, 63)
+            Dim gr As Graphics = Graphics.FromImage(frame(i))
+            Dim xPosition As Integer = (i Mod 9) * 64
+            gr.DrawImage(img, 0, 0, New RectangleF(xPosition, 505 + (Int(i / 9) * 63), 62, 63), GraphicsUnit.Pixel)
         Next
     End Sub
 
@@ -48,8 +48,8 @@
 
         If visible Then
 
-            G.FillEllipse(New SolidBrush(Color.FromArgb(150, 0, 0, 0)), New RectangleF(CSng(_x + 15), CSng(_y + 45), 28, 14))
-            G.DrawImage(CType(normalFrame(direct), Image), CSng(_x), CSng(_y), 61, 64)
+            G.FillEllipse(New SolidBrush(Color.FromArgb(150, 0, 0, 0)), New RectangleF(CSng(_x + 3), CSng(_y + 45), 28, 14))
+            G.DrawImage(CType(frame(direct), Image), CSng(_x), CSng(_y), 61, 64)
         End If
     End Sub
 
@@ -102,6 +102,7 @@
                 Direction = 9
             End If
         End If
+
         If _speedY = 0 And _speedX = 0 Then
             If Direction < 8 Then
                 Direction = 0

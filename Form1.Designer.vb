@@ -36,8 +36,14 @@ Partial Class Form1
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackgroundImage = Global.Project4.My.Resources.Resources.grass
+        Me.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.ClientSize = New System.Drawing.Size(1184, 1161)
+        Me.MaximizeBox = False
+        Me.MaximumSize = New System.Drawing.Size(1200, 1200)
+        Me.MinimizeBox = False
+        Me.MinimumSize = New System.Drawing.Size(1200, 1200)
         Me.Name = "Form1"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Form1"
         Me.ResumeLayout(False)
 
