@@ -9,7 +9,11 @@
     Public Property maxSpeed As Decimal
     Public Property timer As Integer
     Public Property directionTime As Integer
+    Public Property Health As Double
     Private direct As Integer
+    Public ReadOnly Property Width As Double = 34
+    Public ReadOnly Property Height As Double = 64
+
 
     Public Property Direction As Integer
         Get
@@ -30,8 +34,9 @@
         _y = randY
         _maxSpeed = 2
         Direction = 18
-        moving = False
-        running = False
+        _moving = False
+        _running = False
+        _Health = 100
         Dim img As New Bitmap(My.Resources.zombie)
         _visible = True
         For i As Integer = 0 To 35
@@ -45,8 +50,9 @@
     Public Sub Show(G As Graphics)
 
         If visible Then
-
             G.FillEllipse(New SolidBrush(Color.FromArgb(150, 0, 0, 0)), New RectangleF(CSng(_x + 3), CSng(_y + 45), 28, 14))
+            ' hitbox test 
+            'G.DrawRectangle(New Pen(Color.Red), New Rectangle(CSng(_x), CSng(_y), Width, Height))
             G.DrawImage(CType(frame(direct), Image), CSng(_x), CSng(_y), 61, 64)
         End If
     End Sub

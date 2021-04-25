@@ -36,7 +36,6 @@
         G.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
         For i As Integer = 0 To logicalZombie
             Zombies(i).Show(G)
-
         Next
         Hero.Show(G)
         Knife.Show(G)
@@ -73,18 +72,24 @@
             End If
         Else
             Hero.knifeCounter = attackseq
-            If counter Mod 3S = 0 Then
+            If counter Mod 3 = 0 Then
                 attackseq += 1
             End If
             If attackseq > 5 Then
+                For i As Integer = 0 To logicalZombie
+                    If RectsCollision(Knife.xStart, Knife.yStart, Knife.Width, Knife.Height, Zombies(i).x, Zombies(i).y, Zombies(i).Width, Zombies(i).Height) Then
+                        Zombies(i).Health -= Knife.dmg * Hero.sMultiplier
+                        If Zombies(i).Health <= 0 Then
+                            Zombies(i).visible = False
+                        End If
+                    End If
+                Next
                 attackseq = 0
                 Hero.knifing = False
             End If
         End If
 
-
-
-            If keysPressed.Contains(Keys.ShiftKey) Then
+        If keysPressed.Contains(Keys.ShiftKey) Then
             Hero.running = True
             runMod = 5
         Else
@@ -116,12 +121,16 @@
         Hero.Update()
         Invalidate()
 
-        ' Weapons testing
         Knife.x = Hero.x
         Knife.y = Hero.y
-
     End Sub
 
+    Private Function RectsCollision(r1x As Double, r1y As Double, r1w As Double, r1h As Double, r2x As Double, r2y As Double, r2w As Double, r2h As Double) As Boolean
+        If (r1x + r1w >= r2x And r1x <= r2x + r2w And r1y + r1h >= r2y And r1y <= r2y + r2h) Then
+            Return True
+        End If
+        Return False
+    End Function
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
         keysPressed.Add(e.KeyCode)
     End Sub

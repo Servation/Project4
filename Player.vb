@@ -9,7 +9,9 @@
     Public Property maxSpeed As Decimal
     Public Property knifing As Boolean
     Public Property knifeCounter As Integer
-
+    Public Property sMultiplier As Double
+    Public Property Health As Decimal
+    Public Property Energy As Decimal
     Private direct As Integer
     Private normalFrames(35) As Bitmap
     Private knifeFrames(23) As Bitmap
@@ -28,9 +30,12 @@
         _y = MainRect.Height / 2 - 45
         _maxSpeed = 1.5
         Direction = 18
-        moving = False
-        running = False
-        knifing = False
+        _Health = 100
+        _Energy = 100
+        _sMultiplier = 1
+        _moving = False
+        _running = False
+        _knifing = False
         Dim img As New Bitmap(My.Resources.playerwalking)
         _visible = True
         For i As Integer = 0 To 35
@@ -67,10 +72,8 @@
                     G.DrawImage(CType(knifeFrames(18 + knifeCounter), Image), CSng(_x), CSng(_y - 4), 61, 64)
                 End If
             Else
-                    G.DrawImage(CType(normalFrames(direct), Image), CSng(_x), CSng(_y), 61, 64)
-                End If
-
-
+                G.DrawImage(CType(normalFrames(direct), Image), CSng(_x), CSng(_y), 61, 64)
+            End If
         End If
 
         ' test attackframes
