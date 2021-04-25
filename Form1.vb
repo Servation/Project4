@@ -41,7 +41,7 @@
         Knife.Show(G)
     End Sub
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        If keysPressed.Contains(Keys.Space) Then
+        If keysPressed.Contains(Keys.Space) And Hero.Energy >= 10 Then
             Hero.knifing = True
         End If
 
@@ -95,6 +95,7 @@
                         End If
                 Next
                 attackseq = 0
+                Hero.Energy -= 10
                 Hero.knifing = False
             End If
         End If
@@ -109,7 +110,15 @@
 
         If counter Mod runMod = 0 And Hero.moving Then
             Hero.Direction += 1
+            If Hero.Energy >= 0 And Hero.running Then
+                Hero.Energy -= 0.5
+            End If
+
         End If
+        If Hero.Energy < 100 And Not Hero.running Then
+            Hero.Energy += 0.1
+        End If
+
 
         For i As Integer = 0 To logicalZombie
             If Zombies(i).timer <= 0 Then

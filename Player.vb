@@ -71,6 +71,13 @@
             Else
                 G.DrawImage(CType(normalFrames(direct), Image), CSng(_x), CSng(_y), 61, 64)
             End If
+
+            ' health and energy bar
+            G.FillRectangle(New SolidBrush(Color.Black), New Rectangle(5, 5, 335, 75))
+            G.FillRectangle(New SolidBrush(Color.DarkSlateGray), New Rectangle(CSng(19), CSng(19), 302, 22))
+            G.FillRectangle(New SolidBrush(Color.Red), New Rectangle(CSng(20), CSng(20), _Health * 3, 20))
+            G.FillRectangle(New SolidBrush(Color.DarkSlateGray), New Rectangle(CSng(19), CSng(49), 302, 17))
+            G.FillRectangle(New SolidBrush(Color.Yellow), New Rectangle(CSng(20), CSng(50), _Energy * 3, 15))
         End If
 
         ' test attackframes
