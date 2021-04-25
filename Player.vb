@@ -52,9 +52,6 @@
             Dim xPosition As Integer = (i Mod 6) * 64
             gs.DrawImage(imgknife, 0, 0, New RectangleF(xPosition, 757 + (Int(i / 6) * 64), 61, 64), GraphicsUnit.Pixel)
         Next
-
-
-
     End Sub
 
     Public Sub Show(G As Graphics)

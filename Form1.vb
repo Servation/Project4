@@ -1,7 +1,7 @@
 ﻿Public Class Form1
     Private MainRect As Rectangle
     Private Hero As Player
-    Private Zombies(10) As Enemy
+    Private Zombies(50) As Enemy
     Private Knife As Attack
     Private logicalZombie As Integer = 0
     Private keysPressed As New HashSet(Of Keys)
@@ -79,10 +79,20 @@
                 For i As Integer = 0 To logicalZombie
                     If RectsCollision(Knife.xStart, Knife.yStart, Knife.Width, Knife.Height, Zombies(i).x, Zombies(i).y, Zombies(i).Width, Zombies(i).Height) Then
                         Zombies(i).Health -= Knife.dmg * Hero.sMultiplier
+                        Select Case Knife.direction
+                            Case 0
+                                Zombies(i).speedY -= 6
+                            Case 1
+                                Zombies(i).speedY += 6
+                            Case 2
+                                Zombies(i).speedX -= 6
+                            Case 3
+                                Zombies(i).speedX += 6
+                        End Select
                         If Zombies(i).Health <= 0 Then
-                            Zombies(i).visible = False
+                                Zombies(i).visible = False
+                            End If
                         End If
-                    End If
                 Next
                 attackseq = 0
                 Hero.knifing = False
@@ -91,16 +101,15 @@
 
         If keysPressed.Contains(Keys.ShiftKey) Then
             Hero.running = True
-            runMod = 5
+            runMod = 3
         Else
             Hero.running = False
-            runMod = 10
+            runMod = 6
         End If
 
         If counter Mod runMod = 0 And Hero.moving Then
             Hero.Direction += 1
         End If
-
 
         For i As Integer = 0 To logicalZombie
             If Zombies(i).timer <= 0 Then
@@ -126,10 +135,7 @@
     End Sub
 
     Private Function RectsCollision(r1x As Double, r1y As Double, r1w As Double, r1h As Double, r2x As Double, r2y As Double, r2w As Double, r2h As Double) As Boolean
-        If (r1x + r1w >= r2x And r1x <= r2x + r2w And r1y + r1h >= r2y And r1y <= r2y + r2h) Then
-            Return True
-        End If
-        Return False
+        Return (r1x + r1w >= r2x And r1x <= r2x + r2w And r1y + r1h >= r2y And r1y <= r2y + r2h)
     End Function
     Private Sub Form1_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
         keysPressed.Add(e.KeyCode)

@@ -48,11 +48,16 @@
     End Sub
 
     Public Sub Show(G As Graphics)
-
         If visible Then
             G.FillEllipse(New SolidBrush(Color.FromArgb(150, 0, 0, 0)), New RectangleF(CSng(_x + 3), CSng(_y + 45), 28, 14))
-            ' hitbox test 
+            ' hitbox area 
             'G.DrawRectangle(New Pen(Color.Red), New Rectangle(CSng(_x), CSng(_y), Width, Height))
+            ' health bar/pool
+            If _Health < 100 Then
+                G.DrawRectangle(New Pen(Color.Black), New Rectangle(CSng(_x - 8), CSng(_y - 10), 50, 10))
+                G.FillRectangle(New SolidBrush(Color.DarkRed), New Rectangle(CSng(_x - 8), CSng(_y - 10), _Health / 2, 10))
+            End If
+
             G.DrawImage(CType(frame(direct), Image), CSng(_x), CSng(_y), 61, 64)
         End If
     End Sub
@@ -65,7 +70,6 @@
         End If
         _x += _speedX
         _y += _speedY
-
         declerate()
     End Sub
 
