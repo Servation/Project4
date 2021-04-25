@@ -7,8 +7,8 @@
     Public Property moving As Boolean
     Public Property running As Boolean
     Public Property maxSpeed As Decimal
-    Public Property Timer As Integer
-    Public Property DirectionTime As Integer
+    Public Property timer As Integer
+    Public Property directionTime As Integer
     Private direct As Integer
 
     Public Property Direction As Integer
@@ -24,18 +24,16 @@
 
     Private MainRect As Rectangle
 
-    Sub New(MainRect As Rectangle)
+    Sub New(MainRect As Rectangle, randX As Integer, randY As Integer)
         Me.MainRect = MainRect
-        _x = 100
-        _y = 100
+        _x = randX
+        _y = randY
         _maxSpeed = 2
         Direction = 18
         moving = False
         running = False
         Dim img As New Bitmap(My.Resources.zombie)
         _visible = True
-        Dim bitY = 0
-
         For i As Integer = 0 To 35
             frame(i) = New Bitmap(62, 63)
             Dim gr As Graphics = Graphics.FromImage(frame(i))
@@ -62,16 +60,6 @@
         _x += _speedX
         _y += _speedY
 
-        If _x < -10 Then
-            _x = -10
-        ElseIf _x > MainRect.Width - 45 Then
-            _x = MainRect.Width - 45
-        End If
-        If _y < -5 Then
-            _y = -5
-        ElseIf _y > MainRect.Height - 55 Then
-            _y = MainRect.Height - 55
-        End If
         declerate()
     End Sub
 
@@ -113,8 +101,28 @@
             Else
                 Direction = 27
             End If
-            moving = False
+            _moving = False
         End If
+    End Sub
 
+    Public Sub enemyAI()
+        If _directionTime = 0 And _speedX > -_maxSpeed Then
+            _speedX -= 1
+            _moving = True
+            directionTime = If(_x < 20, 1, 0)
+        ElseIf _directionTime = 1 And _speedX < _maxSpeed Then
+            _speedX += 1
+            _moving = True
+            _directionTime = If(_x > MainRect.Width - 65, 0, 1)
+        ElseIf _directionTime = 2 And _speedY > -_maxSpeed Then
+            _speedY -= 1
+            moving = True
+            _directionTime = If(_y < 20, 3, 2)
+        ElseIf _directionTime = 3 And _speedY < _maxSpeed Then
+            speedY += 1
+            _moving = True
+            _directionTime = If(_y > MainRect.Height - 65, 2, 3)
+        End If
+        _timer -= 1
     End Sub
 End Class

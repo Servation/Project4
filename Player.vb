@@ -5,12 +5,15 @@
     Public Property speedY As Decimal
     Public Property visible As Boolean
     Public Property moving As Boolean
-
     Public Property running As Boolean
-
     Public Property maxSpeed As Decimal
-    Private direct As Integer
+    Public Property knifing As Boolean
+    Public Property knifeCounter As Integer
 
+    Private direct As Integer
+    Private normalFrames(35) As Bitmap
+    Private knifeFrames(23) As Bitmap
+    Private MainRect As Rectangle
     Public Property Direction As Integer
         Get
             Return direct
@@ -19,11 +22,6 @@
             direct = value
         End Set
     End Property
-
-    Private normalFrame(35) As Bitmap
-
-    Private MainRect As Rectangle
-
     Sub New(MainRect As Rectangle)
         Me.MainRect = MainRect
         _x = MainRect.Width / 2 - 45
@@ -32,25 +30,55 @@
         Direction = 18
         moving = False
         running = False
+        knifing = False
         Dim img As New Bitmap(My.Resources.playerwalking)
         _visible = True
-        Dim bitY = 0
-
         For i As Integer = 0 To 35
-            normalFrame(i) = New Bitmap(61, 64)
-            Dim gr As Graphics = Graphics.FromImage(normalFrame(i))
+            normalFrames(i) = New Bitmap(61, 64)
+            Dim gr As Graphics = Graphics.FromImage(normalFrames(i))
             Dim xPosition As Integer = (i Mod 9) * 63
             gr.DrawImage(img, 0, 0, New RectangleF(xPosition, Int(i / 9) * 64, 61, 64), GraphicsUnit.Pixel)
         Next
+        Dim imgknife As New Bitmap(My.Resources.player)
+
+        For i As Integer = 0 To knifeFrames.Count - 1
+            knifeFrames(i) = New Bitmap(61, 64)
+            Dim gs As Graphics = Graphics.FromImage(knifeFrames(i))
+            Dim xPosition As Integer = (i Mod 6) * 64
+            gs.DrawImage(imgknife, 0, 0, New RectangleF(xPosition, 757 + (Int(i / 6) * 64), 61, 64), GraphicsUnit.Pixel)
+        Next
+
+
+
     End Sub
 
     Public Sub Show(G As Graphics)
 
         If visible Then
-
             G.FillEllipse(New SolidBrush(Color.FromArgb(150, 0, 0, 0)), New RectangleF(CSng(_x + 15), CSng(_y + 45), 28, 14))
-            G.DrawImage(CType(normalFrame(direct), Image), CSng(_x), CSng(_y), 61, 64)
+            If knifing Then
+                If Direction >= 0 And Direction <= 8 Then
+                    G.DrawImage(CType(knifeFrames(0 + knifeCounter), Image), CSng(_x), CSng(_y - 4), 61, 64)
+                ElseIf Direction >= 9 And Direction <= 17 Then
+                    G.DrawImage(CType(knifeFrames(6 + knifeCounter), Image), CSng(_x), CSng(_y - 4), 61, 64)
+                ElseIf Direction >= 18 And Direction <= 26 Then
+                    G.DrawImage(CType(knifeFrames(12 + knifeCounter), Image), CSng(_x), CSng(_y - 4), 61, 64)
+                ElseIf Direction >= 27 Then
+                    G.DrawImage(CType(knifeFrames(18 + knifeCounter), Image), CSng(_x), CSng(_y - 4), 61, 64)
+                End If
+            Else
+                    G.DrawImage(CType(normalFrames(direct), Image), CSng(_x), CSng(_y), 61, 64)
+                End If
+
+
         End If
+
+        ' test attackframes
+        'For i As Integer = 0 To knifeFrames.Count - 1
+        '    G.DrawImage(CType(knifeFrames(i), Image), i * 40, 0, 61, 64)
+        'Next
+
+
     End Sub
 
     Public Sub Update()
@@ -114,6 +142,9 @@
             End If
             moving = False
         End If
+        If knifing Then
+        End If
+
 
     End Sub
 End Class

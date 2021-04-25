@@ -73,6 +73,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attack.vb" />
     <Compile Include="Enemy.vb" />
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
@@ -97,6 +98,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Player.vb" />
+    <Compile Include="Projectile.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form1.resx">
@@ -129,6 +131,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\zombie.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pngfind.com-sprite-png-405863.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
