@@ -1,7 +1,9 @@
 ﻿Public Class Form1
     Private MainRect As Rectangle
     Private Hero As Player
-    Private Zombies(0) As Enemy
+    Private allZomb As Integer = 9
+    Private Zombies(allZomb) As Enemy
+    Private ZomHit(allZomb) As Attack
     Private Knife As Attack
     Private logicalZombie As Integer = 0
     Private keysPressed As New HashSet(Of Keys)
@@ -27,17 +29,22 @@
             Else
                 Zombies(i) = New Enemy(MainRect, -20, MainRect.Height / 2)
             End If
+            ZomHit(i) = New Attack(MainRect)
         Next
         Knife = New Attack(MainRect)
+
+
     End Sub
     Private Sub Form1_Paint(sender As Object, e As PaintEventArgs) Handles Me.Paint
         Dim G As Graphics = e.Graphics
         G.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
         For i As Integer = 0 To logicalZombie
             Zombies(i).Show(G)
+            ZomHit(i).Show(G)
         Next
         Hero.Show(G)
         Knife.Show(G)
+
     End Sub
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         If keysPressed.Contains(Keys.Space) And Hero.Energy > 0 Then
@@ -49,7 +56,6 @@
             AttKnife()
         End If
         Running()
-
         If counter Mod runMod = 0 And Hero.moving Then
             Hero.Direction += 1
             If Hero.Energy >= 0 And Hero.running Then
@@ -62,10 +68,15 @@
         End If
 
         For i As Integer = 0 To logicalZombie
-            If RecSqrCollision(Zombies(i).cx, Zombies(i).cy, Zombies(i).cRadius, Hero.x, Hero.y, 61, 64) Then
+            If CirSqrCollision(Zombies(i).cx, Zombies(i).cy, Zombies(i).cRadius, Hero.x, Hero.y, 61, 64) Then
 
                 If zomTB(i) And zomLR(i) Then
-                    ' TODO()
+                    If Not Zombies(i).moving Then
+                        Zombies(i).isAtk = True
+                        zomAtk(i)
+                    End If
+                Else
+                    Zombies(i).isAtk = False
                 End If
                 Zombies(i).timer -= 1
             Else
@@ -130,16 +141,20 @@
     End Function
 
     Private Sub zomAtk(i)
-        Zombies(i).atkCounter = Knife.atkseq
-        If counter Mod 3 = 0 Then
-            Knife.size += 1
+        ZomHit(i).x = Zombies(i).x
+        ZomHit(i).y = Zombies(i).y
+        Zombies(i).atkCounter = ZomHit(i).atkseq
+        If counter Mod 5 = 0 Then
+            ZomHit(i).atkseq += 1
         End If
-        If Knife.atkseq > 5 Then
-            'If RectsCollision(Knife.xStart, Knife.yStart, Knife.Width, Knife.Height, Hero.x, Hero.y, ) Then
-            'End If
+        If ZomHit(i).atkseq > 5 Then
+            If RectsCollision(ZomHit(i).xStart, ZomHit(i).yStart, ZomHit(i).Width, ZomHit(i).Height, Hero.x + 15, Hero.y, 30, 60) Then
+                Hero.Health -= 1
+            End If
+            ZomHit(i).atkseq = 0
+            Zombies(i).isAtk = False
         End If
-        Knife.atkseq = 0
-        Zombies(i).isAtk = False
+
     End Sub
     Private Sub AttKnife()
         Knife.x = Hero.x
@@ -154,13 +169,13 @@
                     Zombies(i).Health -= Knife.dmg * Hero.sMultiplier
                     Select Case Knife.direction
                         Case 0
-                            Zombies(i).speedY -= 8
+                            Zombies(i).speedY -= 12
                         Case 1
-                            Zombies(i).speedY += 8
+                            Zombies(i).speedY += 12
                         Case 2
-                            Zombies(i).speedX -= 8
+                            Zombies(i).speedX -= 12
                         Case 3
-                            Zombies(i).speedX += 8
+                            Zombies(i).speedX += 12
                     End Select
                     If Zombies(i).Health <= 0 Then
                         Zombies(i).visible = False
@@ -204,7 +219,7 @@
         Return (r1x + r1w >= r2x And r1x <= r2x + r2w And r1y + r1h >= r2y And r1y <= r2y + r2h)
     End Function
 
-    Private Function RecSqrCollision(cx As Double, cy As Double, cRadius As Double, rx As Double, ry As Double, rWidth As Double, rHeight As Double) As Boolean
+    Private Function CirSqrCollision(cx As Double, cy As Double, cRadius As Double, rx As Double, ry As Double, rWidth As Double, rHeight As Double) As Boolean
         Dim tempX As Double = cx
         Dim tempY As Double = cy
 

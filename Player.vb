@@ -40,7 +40,7 @@
         _knifing = False
         Dim img As New Bitmap(My.Resources.playerwalking)
         _visible = True
-        For i As Integer = 0 To 35
+        For i As Integer = 0 To normalFrames.Count - 1
             normalFrames(i) = New Bitmap(61, 64)
             Dim gr As Graphics = Graphics.FromImage(normalFrames(i))
             Dim xPosition As Integer = (i Mod 9) * 63
@@ -73,9 +73,6 @@
             Else
                 G.DrawImage(CType(normalFrames(direct), Image), CSng(_x), CSng(_y), 61, 64)
             End If
-
-            G.DrawRectangle(New Pen(Color.Red), New Rectangle(CSng(_x + 10), CSng(_y), Width, Height))
-
             ' health and energy bar
             G.FillRectangle(New SolidBrush(Color.Black), New Rectangle(5, 5, 335, 75))
             G.FillRectangle(New SolidBrush(Color.DarkSlateGray), New Rectangle(CSng(19), CSng(19), 302, 22))
@@ -84,6 +81,8 @@
             G.FillRectangle(New SolidBrush(Color.Yellow), New Rectangle(CSng(20), CSng(50), _Energy * 3, 15))
         End If
 
+        'testing hit box for player
+        'G.DrawRectangle(New Pen(Color.Red), New Rectangle(CSng(_x + 15), CSng(_y), Width, Height))
         ' test attackframes
         'For i As Integer = 0 To knifeFrames.Count - 1
         '    G.DrawImage(CType(knifeFrames(i), Image), i * 40, 0, 61, 64)

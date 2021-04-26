@@ -41,6 +41,7 @@
         Direction = 18
         _moving = False
         _Health = 100
+        _isAtk = False
         Dim img As New Bitmap(My.Resources.zombie)
         _visible = True
         For i As Integer = 0 To 35
@@ -52,8 +53,8 @@
         For i As Integer = 0 To atkFrame.Count - 1
             atkFrame(i) = New Bitmap(62, 63)
             Dim gr As Graphics = Graphics.FromImage(atkFrame(i))
-            Dim xPos As Integer = (i Mod 6) * 64
-            gr.DrawImage(img, 0, 0, New RectangleF(xPos, 759 + (Int(i / 6) * 63), 62, 63), GraphicsUnit.Pixel)
+            Dim xPos As Integer = (i Mod 6) * 63
+            gr.DrawImage(img, 0, 0, New RectangleF(xPos, 759 + (Int(i / 6) * 63), 60, 63), GraphicsUnit.Pixel)
         Next
     End Sub
 
@@ -67,12 +68,25 @@
                 G.DrawRectangle(New Pen(Color.Black), New Rectangle(CSng(_x - 8), CSng(_y - 10), 50, 10))
                 G.FillRectangle(New SolidBrush(Color.DarkRed), New Rectangle(CSng(_x - 8), CSng(_y - 10), _Health / 2, 10))
             End If
-            G.DrawImage(normalFrame(direct), CSng(_x), CSng(_y), 61, 64)
+            If isAtk Then
+                If Direction >= 0 And Direction <= 8 Then
+                    G.DrawImage(CType(atkFrame(0 + atkCounter), Image), CSng(_x), CSng(_y - 4), 61, 64)
+                ElseIf Direction >= 9 And Direction <= 17 Then
+                    G.DrawImage(CType(atkFrame(6 + atkCounter), Image), CSng(_x), CSng(_y - 4), 61, 64)
+                ElseIf Direction >= 18 And Direction <= 26 Then
+                    G.DrawImage(CType(atkFrame(12 + atkCounter), Image), CSng(_x), CSng(_y - 4), 61, 64)
+                ElseIf Direction >= 27 Then
+                    G.DrawImage(CType(atkFrame(18 + atkCounter), Image), CSng(_x), CSng(_y - 4), 61, 64)
+                End If
+            Else
+                G.DrawImage(normalFrame(direct), CSng(_x), CSng(_y), 61, 64)
+            End If
+
 
             ' test atk frames
-            For i As Integer = 0 To atkFrame.Count - 1
-                G.DrawImage(atkFrame(i), 60 * i, 100, 61, 64)
-            Next
+            'For i As Integer = 0 To atkFrame.Count - 1
+            '    G.DrawImage(atkFrame(i), 60 * i, 100, 61, 64)
+            'Next
             ' Area where it starts following player
             'G.DrawEllipse(New Pen(Color.Red), New Rectangle(CSng(_x - 130), CSng(_y - 100), 300, 300))
             ' hitbox area 
