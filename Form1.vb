@@ -67,7 +67,6 @@
         End If
         For i As Integer = 0 To logicalZombie
             If CirSqrCollision(Zombies(i).cx, Zombies(i).cy, Zombies(i).cRadius, Hero.x, Hero.y, 61, 64) Then
-
                 If zomTB(i) And zomLR(i) Then
                     If Not Zombies(i).moving Then
                         Zombies(i).isAtk = True
@@ -91,6 +90,7 @@
         End If
         counter += 1
         Hero.Update()
+        Building()
         Invalidate()
     End Sub
     Private Sub Running()
@@ -108,6 +108,26 @@
             Zombies(i).directionTime = Gen.Next(0, 8)
         Else
             Zombies(i).enemyAI()
+        End If
+    End Sub
+    Private Sub Building()
+        If CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, Shop.xBase, Shop.yBase, 64 * 2, 64 * 2) Then
+            If keysPressed.Contains(Keys.W) Then
+                Hero.y += 1
+                Hero.speedY = 0
+            End If
+            If keysPressed.Contains(Keys.S) Then
+                Hero.y -= 1
+                Hero.speedY = 0
+            End If
+            If keysPressed.Contains(Keys.D) Then
+                Hero.x -= 1
+                Hero.speedX = 0
+            End If
+            If keysPressed.Contains(Keys.A) Then
+                Hero.x += 1
+                Hero.speedX = 0
+            End If
         End If
     End Sub
     Private Function zomTB(i As Integer) As Boolean

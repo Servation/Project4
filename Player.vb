@@ -12,6 +12,7 @@
     Public Property sMultiplier As Double
     Public Property Health As Decimal
     Public Property Energy As Decimal
+    Public Property Collision As Boolean
     Private direct As Integer
     Private normalFrames(35) As Bitmap
     Private knifeFrames(23) As Bitmap
@@ -35,6 +36,7 @@
         _Health = 100
         _Energy = 100
         _sMultiplier = 1
+        _Collision = False
         _moving = False
         _running = False
         _knifing = False
@@ -139,6 +141,7 @@
                 Direction = 9
             End If
         End If
+
         If _speedY = 0 And _speedX = 0 Then
             If Direction < 8 Then
                 Direction = 0
