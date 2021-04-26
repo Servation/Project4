@@ -5,11 +5,13 @@
     Public Property speedY As Decimal
     Public Property visible As Boolean
     Public Property moving As Boolean
-    Public Property running As Boolean
     Public Property maxSpeed As Decimal
     Public Property timer As Integer
     Public Property directionTime As Integer
     Public Property Health As Double
+    Public Property cx As Double
+    Public Property cy As Double
+    Public Property cRadius As Double
     Private direct As Integer
     Public ReadOnly Property Width As Double = 34
     Public ReadOnly Property Height As Double = 64
@@ -32,10 +34,9 @@
         Me.MainRect = MainRect
         _x = randX
         _y = randY
-        _maxSpeed = 2
+        _maxSpeed = 1.7
         Direction = 18
         _moving = False
-        _running = False
         _Health = 100
         Dim img As New Bitmap(My.Resources.zombie)
         _visible = True
@@ -49,7 +50,12 @@
 
     Public Sub Show(G As Graphics)
         If visible Then
-            G.FillEllipse(New SolidBrush(Color.FromArgb(150, 0, 0, 0)), New RectangleF(CSng(_x + 3), CSng(_y + 45), 28, 14))
+            G.FillEllipse(New SolidBrush(Color.FromArgb(150, 0, 0, 0)), New Rectangle(CSng(_x + 3), CSng(_y + 45), 28, 14))
+            cRadius = 150
+            cx = _x - 130 + cRadius
+            cy = _y - 100 + cRadius
+            ' Area where it starts following player
+            'G.DrawEllipse(New Pen(Color.Red), New Rectangle(CSng(_x - 130), CSng(_y - 100), 300, 300))
             ' hitbox area 
             'G.DrawRectangle(New Pen(Color.Red), New Rectangle(CSng(_x), CSng(_y), Width, Height))
             ' health bar/pool
@@ -63,11 +69,6 @@
     End Sub
 
     Public Sub Update()
-        If running Then
-            maxSpeed = 3
-        Else
-            maxSpeed = 1.5
-        End If
         _x += _speedX
         _y += _speedY
         declerate()
@@ -119,7 +120,7 @@
         If _directionTime = 0 And _speedX > -_maxSpeed Then
             _speedX -= 1
             _moving = True
-            directionTime = If(_x < 20, 1, 0)
+            _directionTime = If(_x < 20, 1, 0)
         ElseIf _directionTime = 1 And _speedX < _maxSpeed Then
             _speedX += 1
             _moving = True
