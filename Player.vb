@@ -16,6 +16,8 @@
     Private normalFrames(35) As Bitmap
     Private knifeFrames(23) As Bitmap
     Private MainRect As Rectangle
+    Public ReadOnly Property Width As Double = 30
+    Public ReadOnly Property Height As Double = 60
     Public Property Direction As Integer
         Get
             Return direct
@@ -72,6 +74,8 @@
                 G.DrawImage(CType(normalFrames(direct), Image), CSng(_x), CSng(_y), 61, 64)
             End If
 
+            G.DrawRectangle(New Pen(Color.Red), New Rectangle(CSng(_x + 10), CSng(_y), Width, Height))
+
             ' health and energy bar
             G.FillRectangle(New SolidBrush(Color.Black), New Rectangle(5, 5, 335, 75))
             G.FillRectangle(New SolidBrush(Color.DarkSlateGray), New Rectangle(CSng(19), CSng(19), 302, 22))
@@ -84,7 +88,6 @@
         'For i As Integer = 0 To knifeFrames.Count - 1
         '    G.DrawImage(CType(knifeFrames(i), Image), i * 40, 0, 61, 64)
         'Next
-
 
     End Sub
 
@@ -149,9 +152,5 @@
             End If
             moving = False
         End If
-        If knifing Then
-        End If
-
-
     End Sub
 End Class

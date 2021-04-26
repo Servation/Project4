@@ -1,13 +1,12 @@
 ﻿Public Class Form1
     Private MainRect As Rectangle
     Private Hero As Player
-    Private Zombies(50) As Enemy
+    Private Zombies(0) As Enemy
     Private Knife As Attack
     Private logicalZombie As Integer = 0
     Private keysPressed As New HashSet(Of Keys)
     Private counter As Integer = 0
     Private runMod As Integer = 10
-    Private attackseq As Integer = 0
     Private Gen As New Random
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         DoubleBuffered = True
@@ -20,7 +19,7 @@
         For i As Integer = 0 To Zombies.Count - 1
             Dim loc As Integer = i Mod 4
             If loc = 0 Then
-                Zombies(i) = New Enemy(MainRect, MainRect.Width / 2, -40)
+                Zombies(i) = New Enemy(MainRect, MainRect.Width / 2, -60)
             ElseIf loc = 1 Then
                 Zombies(i) = New Enemy(MainRect, MainRect.Width / 2, MainRect.Height + 30)
             ElseIf loc = 2 Then
@@ -69,8 +68,8 @@
                     ' TODO()
                 End If
                 Zombies(i).timer -= 1
-                Else
-                    ZombieAI(i)
+            Else
+                ZombieAI(i)
             End If
             If counter Mod 10 = 0 And Zombies(i).moving Then
                 Zombies(i).Direction += 1
@@ -130,12 +129,26 @@
         Return True
     End Function
 
-    Private Sub AttKnife()
-        Hero.knifeCounter = attackseq
+    Private Sub zomAtk(i)
+        Zombies(i).atkCounter = Knife.atkseq
         If counter Mod 3 = 0 Then
-            attackseq += 1
+            Knife.size += 1
         End If
-        If attackseq > 5 Then
+        If Knife.atkseq > 5 Then
+            'If RectsCollision(Knife.xStart, Knife.yStart, Knife.Width, Knife.Height, Hero.x, Hero.y, ) Then
+            'End If
+        End If
+        Knife.atkseq = 0
+        Zombies(i).isAtk = False
+    End Sub
+    Private Sub AttKnife()
+        Knife.x = Hero.x
+        Knife.y = Hero.y
+        Hero.knifeCounter = Knife.atkseq
+        If counter Mod 3 = 0 Then
+            Knife.atkseq += 1
+        End If
+        If Knife.atkseq > 5 Then
             For i As Integer = 0 To logicalZombie
                 If RectsCollision(Knife.xStart, Knife.yStart, Knife.Width, Knife.Height, Zombies(i).x, Zombies(i).y, Zombies(i).Width, Zombies(i).Height) Then
                     Zombies(i).Health -= Knife.dmg * Hero.sMultiplier
@@ -154,12 +167,10 @@
                     End If
                 End If
             Next
-            attackseq = 0
-            Hero.Energy -= 10
+            Knife.atkseq = 0
+            Hero.Energy -= 5
             Hero.knifing = False
         End If
-        Knife.x = Hero.x
-        Knife.y = Hero.y
     End Sub
 
     Private Sub Movement()

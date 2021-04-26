@@ -6,6 +6,7 @@
     Public Property visible As Boolean = True
     Public Property direction As Integer
     Public Property dmg As Double
+    Public Property atkseq As Integer
     Private xS As Decimal
     Private yS As Decimal
     Private W As Decimal
@@ -34,13 +35,11 @@
         End Get
     End Property
 
-
-
-
     Sub New(MainRect As Rectangle)
         Me.MainRect = MainRect
         _direction = 1
         _dmg = 35
+        _atkseq = 0
     End Sub
 
     Public Sub Show(G As Graphics)

@@ -8,6 +8,8 @@
     Public Property maxSpeed As Decimal
     Public Property timer As Integer
     Public Property directionTime As Integer
+    Public Property isAtk As Boolean
+    Public Property atkCounter As Integer
     Public Property Health As Double
     Public Property cx As Double
     Public Property cy As Double
@@ -26,7 +28,8 @@
         End Set
     End Property
 
-    Private frame(35) As Bitmap
+    Private normalFrame(35) As Bitmap
+    Private atkFrame(23) As Bitmap
 
     Private MainRect As Rectangle
 
@@ -41,10 +44,16 @@
         Dim img As New Bitmap(My.Resources.zombie)
         _visible = True
         For i As Integer = 0 To 35
-            frame(i) = New Bitmap(62, 63)
-            Dim gr As Graphics = Graphics.FromImage(frame(i))
+            normalFrame(i) = New Bitmap(62, 63)
+            Dim gr As Graphics = Graphics.FromImage(normalFrame(i))
             Dim xPosition As Integer = (i Mod 9) * 64
             gr.DrawImage(img, 0, 0, New RectangleF(xPosition, 505 + (Int(i / 9) * 63), 62, 63), GraphicsUnit.Pixel)
+        Next
+        For i As Integer = 0 To atkFrame.Count - 1
+            atkFrame(i) = New Bitmap(62, 63)
+            Dim gr As Graphics = Graphics.FromImage(atkFrame(i))
+            Dim xPos As Integer = (i Mod 6) * 64
+            gr.DrawImage(img, 0, 0, New RectangleF(xPos, 759 + (Int(i / 6) * 63), 62, 63), GraphicsUnit.Pixel)
         Next
     End Sub
 
@@ -54,17 +63,21 @@
             cRadius = 150
             cx = _x - 130 + cRadius
             cy = _y - 100 + cRadius
+            If _Health < 100 Then
+                G.DrawRectangle(New Pen(Color.Black), New Rectangle(CSng(_x - 8), CSng(_y - 10), 50, 10))
+                G.FillRectangle(New SolidBrush(Color.DarkRed), New Rectangle(CSng(_x - 8), CSng(_y - 10), _Health / 2, 10))
+            End If
+            G.DrawImage(normalFrame(direct), CSng(_x), CSng(_y), 61, 64)
+
+            ' test atk frames
+            For i As Integer = 0 To atkFrame.Count - 1
+                G.DrawImage(atkFrame(i), 60 * i, 100, 61, 64)
+            Next
             ' Area where it starts following player
             'G.DrawEllipse(New Pen(Color.Red), New Rectangle(CSng(_x - 130), CSng(_y - 100), 300, 300))
             ' hitbox area 
             'G.DrawRectangle(New Pen(Color.Red), New Rectangle(CSng(_x), CSng(_y), Width, Height))
             ' health bar/pool
-            If _Health < 100 Then
-                G.DrawRectangle(New Pen(Color.Black), New Rectangle(CSng(_x - 8), CSng(_y - 10), 50, 10))
-                G.FillRectangle(New SolidBrush(Color.DarkRed), New Rectangle(CSng(_x - 8), CSng(_y - 10), _Health / 2, 10))
-            End If
-
-            G.DrawImage(CType(frame(direct), Image), CSng(_x), CSng(_y), 61, 64)
         End If
     End Sub
 
