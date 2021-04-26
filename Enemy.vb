@@ -17,8 +17,6 @@
     Private direct As Integer
     Public ReadOnly Property Width As Double = 34
     Public ReadOnly Property Height As Double = 64
-
-
     Public Property Direction As Integer
         Get
             Return direct
@@ -27,10 +25,8 @@
             direct = value
         End Set
     End Property
-
     Private normalFrame(35) As Bitmap
     Private atkFrame(23) As Bitmap
-
     Private MainRect As Rectangle
 
     Sub New(MainRect As Rectangle, randX As Integer, randY As Integer)
@@ -57,7 +53,6 @@
             gr.DrawImage(img, 0, 0, New RectangleF(xPos, 759 + (Int(i / 6) * 63), 60, 63), GraphicsUnit.Pixel)
         Next
     End Sub
-
     Public Sub Show(G As Graphics)
         If visible Then
             G.FillEllipse(New SolidBrush(Color.FromArgb(150, 0, 0, 0)), New Rectangle(CSng(_x + 3), CSng(_y + 45), 28, 14))
@@ -81,8 +76,6 @@
             Else
                 G.DrawImage(normalFrame(direct), CSng(_x), CSng(_y), 61, 64)
             End If
-
-
             ' test atk frames
             'For i As Integer = 0 To atkFrame.Count - 1
             '    G.DrawImage(atkFrame(i), 60 * i, 100, 61, 64)
@@ -94,13 +87,11 @@
             ' health bar/pool
         End If
     End Sub
-
     Public Sub Update()
         _x += _speedX
         _y += _speedY
         declerate()
     End Sub
-
     Public Sub declerate()
         If _speedY > 0 Then
             _speedY -= 0.2
@@ -142,7 +133,6 @@
             _moving = False
         End If
     End Sub
-
     Public Sub enemyAI()
         If _directionTime = 0 And _speedX > -_maxSpeed Then
             _speedX -= 1

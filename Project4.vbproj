@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attack.vb" />
+    <Compile Include="Building.vb" />
     <Compile Include="Enemy.vb" />
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
@@ -134,6 +135,33 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\pngfind.com-sprite-png-405863.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rpgTile061.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rpgTile149.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rpgTile148.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rpgTile060.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rpgTile062.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rpgTile112.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rpgTile113.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rpgTile189.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rpgTile187.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

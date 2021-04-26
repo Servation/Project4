@@ -1,10 +1,11 @@
 ﻿Public Class Form1
     Private MainRect As Rectangle
     Private Hero As Player
-    Private allZomb As Integer = 9
+    Private allZomb As Integer = 40
     Private Zombies(allZomb) As Enemy
     Private ZomHit(allZomb) As Attack
     Private Knife As Attack
+    Private Shop As Building
     Private logicalZombie As Integer = 0
     Private keysPressed As New HashSet(Of Keys)
     Private counter As Integer = 0
@@ -12,10 +13,9 @@
     Private Gen As New Random
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         DoubleBuffered = True
-        StartPlayer()
+        Start()
     End Sub
-
-    Private Sub StartPlayer()
+    Private Sub Start()
         MainRect = DisplayRectangle
         Hero = New Player(MainRect)
         For i As Integer = 0 To Zombies.Count - 1
@@ -32,19 +32,19 @@
             ZomHit(i) = New Attack(MainRect)
         Next
         Knife = New Attack(MainRect)
-
-
+        Shop = New Building(MainRect, 800, 230, 0)
     End Sub
     Private Sub Form1_Paint(sender As Object, e As PaintEventArgs) Handles Me.Paint
         Dim G As Graphics = e.Graphics
         G.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+        Shop.ShowMain(G)
         For i As Integer = 0 To logicalZombie
             Zombies(i).Show(G)
             ZomHit(i).Show(G)
         Next
         Hero.Show(G)
         Knife.Show(G)
-
+        Shop.ShowTop(G)
     End Sub
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         If keysPressed.Contains(Keys.Space) And Hero.Energy > 0 Then
@@ -59,14 +59,12 @@
         If counter Mod runMod = 0 And Hero.moving Then
             Hero.Direction += 1
             If Hero.Energy >= 0 And Hero.running Then
-                Hero.Energy -= 0.5
+                Hero.Energy -= 1
             End If
         End If
-
         If Hero.Energy < 100 And Not Hero.running Then
             Hero.Energy += 0.1
         End If
-
         For i As Integer = 0 To logicalZombie
             If CirSqrCollision(Zombies(i).cx, Zombies(i).cy, Zombies(i).cRadius, Hero.x, Hero.y, 61, 64) Then
 
@@ -95,7 +93,6 @@
         Hero.Update()
         Invalidate()
     End Sub
-
     Private Sub Running()
         If keysPressed.Contains(Keys.ShiftKey) And Hero.Energy > 1 Then
             Hero.running = True
@@ -105,7 +102,6 @@
             runMod = 6
         End If
     End Sub
-
     Private Sub ZombieAI(i As Integer)
         If Zombies(i).timer <= 0 Then
             Zombies(i).timer = Gen.Next(5, 40)
@@ -126,7 +122,6 @@
         End If
         Return True
     End Function
-
     Private Function zomLR(i As Integer) As Boolean
         If Zombies(i).cy > Hero.y + 64 And Zombies(i).speedY > -Zombies(i).maxSpeed Then
             Zombies(i).speedY -= 1
@@ -139,7 +134,6 @@
         End If
         Return True
     End Function
-
     Private Sub zomAtk(i)
         ZomHit(i).x = Zombies(i).x
         ZomHit(i).y = Zombies(i).y
@@ -154,7 +148,6 @@
             ZomHit(i).atkseq = 0
             Zombies(i).isAtk = False
         End If
-
     End Sub
     Private Sub AttKnife()
         Knife.x = Hero.x
@@ -183,7 +176,7 @@
                 End If
             Next
             Knife.atkseq = 0
-            Hero.Energy -= 5
+            Hero.Energy -= 10
             Hero.knifing = False
         End If
     End Sub
