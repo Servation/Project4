@@ -13,6 +13,7 @@
     Public Property Health As Decimal
     Public Property Energy As Decimal
     Public Property Collision As Boolean
+    Public Property Coin As Integer
     Private direct As Integer
     Private normalFrames(35) As Bitmap
     Private knifeFrames(23) As Bitmap
@@ -35,6 +36,7 @@
         Direction = 18
         _Health = 100
         _Energy = 100
+        _Coin = 100
         _sMultiplier = 1
         _Collision = False
         _moving = False
@@ -81,7 +83,12 @@
             G.FillRectangle(New SolidBrush(Color.Red), New Rectangle(CSng(20), CSng(20), _Health * 3, 20))
             G.FillRectangle(New SolidBrush(Color.DarkSlateGray), New Rectangle(CSng(19), CSng(49), 302, 17))
             G.FillRectangle(New SolidBrush(Color.Yellow), New Rectangle(CSng(20), CSng(50), _Energy * 3, 15))
+            Dim font1 As Font = New Font("MS PGothic", 40, FontStyle.Bold, GraphicsUnit.Pixel)
+            Dim p As PointF = New PointF(20, 100)
+            G.DrawString(_Coin.ToString, font1, Brushes.Black, p)
         End If
+
+
 
         'testing hit box for player
         'G.DrawRectangle(New Pen(Color.Red), New Rectangle(CSng(_x + 15), CSng(_y), Width, Height))

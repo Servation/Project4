@@ -90,7 +90,7 @@
         End If
         counter += 1
         Hero.Update()
-        Building()
+        PlayerBuildCol(Shop.xBase, Shop.yBase, 64 * 2, 64 * 2)
         Invalidate()
     End Sub
     Private Sub Running()
@@ -110,8 +110,8 @@
             Zombies(i).enemyAI()
         End If
     End Sub
-    Private Sub Building()
-        If CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, Shop.xBase, Shop.yBase, 64 * 2, 64 * 2) Then
+    Private Sub PlayerBuildCol(xb As Double, yb As Double, w As Double, h As Double)
+        If CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, xb, yb, w, h) Then
             If keysPressed.Contains(Keys.W) Then
                 Hero.y += 1
                 Hero.speedY = 0
@@ -161,10 +161,13 @@
         If counter Mod 5 = 0 Then
             ZomHit(i).atkseq += 1
         End If
+        If RectsCollision(ZomHit(i).xStart, ZomHit(i).yStart, ZomHit(i).Width, ZomHit(i).Height, Hero.x + 15, Hero.y, 30, 60) Then
+            Hero.Health -= 0.1
+        End If
         If ZomHit(i).atkseq > 5 Then
-            If RectsCollision(ZomHit(i).xStart, ZomHit(i).yStart, ZomHit(i).Width, ZomHit(i).Height, Hero.x + 15, Hero.y, 30, 60) Then
-                Hero.Health -= 1
-            End If
+            'If RectsCollision(ZomHit(i).xStart, ZomHit(i).yStart, ZomHit(i).Width, ZomHit(i).Height, Hero.x + 15, Hero.y, 30, 60) Then
+            '    Hero.Health -= 1
+            'End If
             ZomHit(i).atkseq = 0
             Zombies(i).isAtk = False
         End If
@@ -192,6 +195,7 @@
                     End Select
                     If Zombies(i).Health <= 0 Then
                         Zombies(i).visible = False
+                        Hero.Coin += Gen.Next(20, 80)
                     End If
                 End If
             Next
