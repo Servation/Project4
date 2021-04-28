@@ -47,7 +47,7 @@
         Shop.ShowTop(G)
     End Sub
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        If keysPressed.Contains(Keys.Space) And Hero.Energy > 0 Then
+        If keysPressed.Contains(Keys.Space) And Hero.Energy > 10 Then
             Hero.knifing = True
         End If
         If Hero.knifing = False Then
@@ -59,7 +59,7 @@
         If counter Mod runMod = 0 And Hero.moving Then
             Hero.Direction += 1
             If Hero.Energy >= 0 And Hero.running Then
-                Hero.Energy -= 1
+                Hero.Energy -= 0.5
             End If
         End If
         If Hero.Energy < 100 And Not Hero.running Then
@@ -78,6 +78,7 @@
                 Zombies(i).timer -= 1
             Else
                 ZombieAI(i)
+
             End If
             If counter Mod 10 = 0 And Zombies(i).moving Then
                 Zombies(i).Direction += 1
@@ -90,7 +91,6 @@
         End If
         counter += 1
         Hero.Update()
-        PlayerBuildCol(Shop.xBase, Shop.yBase, 64 * 2, 64 * 2)
         Invalidate()
     End Sub
     Private Sub Running()
@@ -107,29 +107,34 @@
             Zombies(i).timer = Gen.Next(5, 40)
             Zombies(i).directionTime = Gen.Next(0, 8)
         Else
-            Zombies(i).enemyAI()
+            Zombies(i).enemyAI(zomBuildingCol(i, Shop.xBase, Shop.yBase, 64 * 2, 64 * 2))
         End If
     End Sub
-    Private Sub PlayerBuildCol(xb As Double, yb As Double, w As Double, h As Double)
-        If CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, xb, yb, w, h) Then
-            If keysPressed.Contains(Keys.W) Then
-                Hero.y += 1
-                Hero.speedY = 0
+    Private Function PlayerBuildCol(xb As Double, yb As Double, w As Double, h As Double) As Boolean
+        Return CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, xb, yb, w, h)
+    End Function
+    Private Function zomBuildingCol(i As Integer, xb As Double, yb As Double, w As Double, h As Double) As Boolean
+        If CirSqrCollision(Zombies(i).x + 15 + 14, Zombies(i).y + 45 + 14, 14, xb, yb, w, h) Then
+            If Zombies(i).directionTime = 0 Then
+                Zombies(i).speedX = 0
+                Zombies(i).x += 1
             End If
-            If keysPressed.Contains(Keys.S) Then
-                Hero.y -= 1
-                Hero.speedY = 0
+            If Zombies(i).directionTime = 1 Then
+                Zombies(i).speedX = 0
+                Zombies(i).x -= 1
             End If
-            If keysPressed.Contains(Keys.D) Then
-                Hero.x -= 1
-                Hero.speedX = 0
+            If Zombies(i).directionTime = 2 Then
+                Zombies(i).speedY = 0
+                Zombies(i).y += 1
             End If
-            If keysPressed.Contains(Keys.A) Then
-                Hero.x += 1
-                Hero.speedX = 0
+            If Zombies(i).directionTime = 3 Then
+                Zombies(i).speedY = 0
+                Zombies(i).y -= 1
             End If
+            Return True
         End If
-    End Sub
+        Return False
+    End Function
     Private Function zomTB(i As Integer) As Boolean
         If Zombies(i).cx > Hero.x + 61 And Zombies(i).speedX > -Zombies(i).maxSpeed Then
             Zombies(i).speedX -= 1
@@ -165,9 +170,6 @@
             Hero.Health -= 0.1
         End If
         If ZomHit(i).atkseq > 5 Then
-            'If RectsCollision(ZomHit(i).xStart, ZomHit(i).yStart, ZomHit(i).Width, ZomHit(i).Height, Hero.x + 15, Hero.y, 30, 60) Then
-            '    Hero.Health -= 1
-            'End If
             ZomHit(i).atkseq = 0
             Zombies(i).isAtk = False
         End If
@@ -194,8 +196,9 @@
                             Zombies(i).speedX += 12
                     End Select
                     If Zombies(i).Health <= 0 Then
+                        Hero.Coin = If(Zombies(i).visible, Gen.Next(5, 30) + Hero.Coin, Hero.Coin)
+                        Hero.Coin = If(Hero.Coin > 999, 999, Hero.Coin)
                         Zombies(i).visible = False
-                        Hero.Coin += Gen.Next(20, 80)
                     End If
                 End If
             Next
@@ -207,25 +210,46 @@
 
     Private Sub Movement()
         If keysPressed.Contains(Keys.A) And Hero.speedX > -Hero.maxSpeed And Not keysPressed.Contains(Keys.D) Then
-            Hero.speedX -= 1
-            Hero.moving = True
-            Knife.direction = 2
+            If PlayerBuildCol(Shop.xBase, Shop.yBase, 64 * 2, 64 * 2) And Hero.x > Shop.xBase Then
+                Hero.speedX = 0
+                Hero.x += 1
+            Else
+                Hero.speedX -= 1
+                Hero.moving = True
+                Knife.direction = 2
+            End If
+
         End If
         If keysPressed.Contains(Keys.D) And Hero.speedX < Hero.maxSpeed And Not keysPressed.Contains(Keys.A) Then
-            Hero.speedX += 1
-            Hero.moving = True
-            Knife.direction = 3
+            If PlayerBuildCol(Shop.xBase, Shop.yBase, 64 * 2, 64 * 2) And Hero.x < Shop.xBase Then
+                Hero.speedX = 0
+                Hero.x -= 1
+            Else
+                Hero.speedX += 1
+                Hero.moving = True
+                Knife.direction = 3
+            End If
         End If
         If keysPressed.Contains(Keys.W) And Hero.speedY > -Hero.maxSpeed And Not keysPressed.Contains(Keys.S) Then
-            Hero.speedY -= 1
-            Hero.moving = True
+            If PlayerBuildCol(Shop.xBase, Shop.yBase, 64 * 2, 64 * 2) And Hero.y > Shop.yBase Then
+                Hero.speedY = 0
+                Hero.y += 1
+            Else
+                Hero.speedY -= 1
+                Hero.moving = True
+            End If
             If Not (keysPressed.Contains(Keys.A) Or keysPressed.Contains(Keys.D)) Then
                 Knife.direction = 0
             End If
         End If
         If keysPressed.Contains(Keys.S) And Hero.speedY < Hero.maxSpeed And Not keysPressed.Contains(Keys.W) Then
-            Hero.speedY += 1
-            Hero.moving = True
+            If PlayerBuildCol(Shop.xBase, Shop.yBase, 64 * 2, 64 * 2) And Hero.y < Shop.yBase Then
+                Hero.speedY = 0
+                Hero.y -= 1
+            Else
+                Hero.speedY += 1
+                Hero.moving = True
+            End If
             If Not (keysPressed.Contains(Keys.A) Or keysPressed.Contains(Keys.D)) Then
                 Knife.direction = 1
             End If

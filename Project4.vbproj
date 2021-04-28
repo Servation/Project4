@@ -163,5 +163,8 @@
   <ItemGroup>
     <None Include="Resources\rpgTile187.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\coin-131982518676438146_512.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

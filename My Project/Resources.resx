@@ -124,6 +124,9 @@
   <data name="BrickR1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\rpgTile062.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="coin" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\coin-131982518676438146_512.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Door1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\rpgTile189.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

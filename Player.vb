@@ -17,6 +17,7 @@
     Private direct As Integer
     Private normalFrames(35) As Bitmap
     Private knifeFrames(23) As Bitmap
+    Private coinimg As Bitmap
     Private MainRect As Rectangle
     Public ReadOnly Property Width As Double = 30
     Public ReadOnly Property Height As Double = 60
@@ -36,7 +37,7 @@
         Direction = 18
         _Health = 100
         _Energy = 100
-        _Coin = 100
+        _Coin = 50
         _sMultiplier = 1
         _Collision = False
         _moving = False
@@ -58,6 +59,7 @@
             Dim xPosition As Integer = (i Mod 6) * 64
             gs.DrawImage(imgknife, 0, 0, New RectangleF(xPosition, 757 + (Int(i / 6) * 64), 61, 64), GraphicsUnit.Pixel)
         Next
+        coinimg = New Bitmap(My.Resources.coin)
     End Sub
 
     Public Sub Show(G As Graphics)
@@ -78,14 +80,15 @@
                 G.DrawImage(CType(normalFrames(direct), Image), CSng(_x), CSng(_y), 61, 64)
             End If
             ' health and energy bar
-            G.FillRectangle(New SolidBrush(Color.Black), New Rectangle(5, 5, 335, 75))
+            G.FillPolygon(New SolidBrush(Color.Black), {New PointF(5, 5), New PointF(340, 5), New PointF(340, 80), New PointF(90, 125), New PointF(5, 125)})
             G.FillRectangle(New SolidBrush(Color.DarkSlateGray), New Rectangle(CSng(19), CSng(19), 302, 22))
             G.FillRectangle(New SolidBrush(Color.Red), New Rectangle(CSng(20), CSng(20), _Health * 3, 20))
             G.FillRectangle(New SolidBrush(Color.DarkSlateGray), New Rectangle(CSng(19), CSng(49), 302, 17))
             G.FillRectangle(New SolidBrush(Color.Yellow), New Rectangle(CSng(20), CSng(50), _Energy * 3, 15))
             Dim font1 As Font = New Font("MS PGothic", 40, FontStyle.Bold, GraphicsUnit.Pixel)
-            Dim p As PointF = New PointF(20, 100)
-            G.DrawString(_Coin.ToString, font1, Brushes.Black, p)
+            Dim p As PointF = New PointF(10, 75)
+            G.DrawString(_Coin.ToString, font1, Brushes.White, p)
+            G.DrawImage(CType(coinimg, Image), 90, 80)
         End If
 
 

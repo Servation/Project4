@@ -133,23 +133,23 @@
             _moving = False
         End If
     End Sub
-    Public Sub enemyAI()
+    Public Sub enemyAI(coll As Boolean)
         If _directionTime = 0 And _speedX > -_maxSpeed Then
             _speedX -= 1
             _moving = True
-            _directionTime = If(_x < 20, 1, 0)
+            _directionTime = If(_x < 20 Or coll, 1, 0)
         ElseIf _directionTime = 1 And _speedX < _maxSpeed Then
             _speedX += 1
             _moving = True
-            _directionTime = If(_x > MainRect.Width - 65, 0, 1)
+            _directionTime = If(_x > MainRect.Width - 65 Or coll, 0, 1)
         ElseIf _directionTime = 2 And _speedY > -_maxSpeed Then
             _speedY -= 1
             moving = True
-            _directionTime = If(_y < 20, 3, 2)
+            _directionTime = If(_y < 20 Or coll, 3, 2)
         ElseIf _directionTime = 3 And _speedY < _maxSpeed Then
             speedY += 1
             _moving = True
-            _directionTime = If(_y > MainRect.Height - 65, 2, 3)
+            _directionTime = If(_y > MainRect.Height - 65 Or coll, 2, 3)
         End If
         _timer -= 1
     End Sub
