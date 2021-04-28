@@ -44,9 +44,12 @@
             ZomHit(i).Show(G)
         Next
         PlayerBuildCol(Shop.xBase, Shop.yBase, 64 * 2, 64 * 2)
-        Hero.Show(G)
-        Knife.Show(G)
-        Shop.ShowTop(G)
+        If Not shopping Then
+            Hero.Show(G)
+            Knife.Show(G)
+            Shop.ShowTop(G)
+        End If
+
     End Sub
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         If Not shopping Then
@@ -105,8 +108,8 @@
                 lblTest.Visible = False
             End If
         End If
-
-            Invalidate()
+        lblCoins.Text = Hero.Coin
+        Invalidate()
     End Sub
     Private Sub Running()
         If keysPressed.Contains(Keys.ShiftKey) And Hero.Energy > 1 Then
