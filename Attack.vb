@@ -38,7 +38,7 @@
     Sub New(MainRect As Rectangle)
         Me.MainRect = MainRect
         _direction = 1
-        _dmg = 35
+        _dmg = 30
         _atkseq = 0
     End Sub
 

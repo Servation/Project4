@@ -79,18 +79,17 @@
             Else
                 G.DrawImage(CType(normalFrames(direct), Image), CSng(_x), CSng(_y), 61, 64)
             End If
-            ' health and energy bar
-            G.FillPolygon(New SolidBrush(Color.Black), {New PointF(5, 5), New PointF(340, 5), New PointF(340, 80), New PointF(90, 125), New PointF(5, 125)})
-            G.FillRectangle(New SolidBrush(Color.DarkSlateGray), New Rectangle(CSng(19), CSng(19), 302, 22))
-            G.FillRectangle(New SolidBrush(Color.Red), New Rectangle(CSng(20), CSng(20), _Health * 3, 20))
-            G.FillRectangle(New SolidBrush(Color.DarkSlateGray), New Rectangle(CSng(19), CSng(49), 302, 17))
-            G.FillRectangle(New SolidBrush(Color.Yellow), New Rectangle(CSng(20), CSng(50), _Energy * 3, 15))
-            Dim font1 As Font = New Font("MS PGothic", 40, FontStyle.Bold, GraphicsUnit.Pixel)
-            Dim p As PointF = New PointF(10, 75)
-            G.DrawString(_Coin.ToString, font1, Brushes.White, p)
-            G.DrawImage(CType(coinimg, Image), 90, 80)
-        End If
 
+        End If
+        G.FillPolygon(New SolidBrush(Color.Black), {New PointF(5, 5), New PointF(340, 5), New PointF(340, 80), New PointF(90, 125), New PointF(5, 125)})
+        G.FillRectangle(New SolidBrush(Color.DarkSlateGray), New Rectangle(CSng(19), CSng(19), 302, 22))
+        G.FillRectangle(New SolidBrush(Color.Red), New Rectangle(CSng(20), CSng(20), _Health * 3, 20))
+        G.FillRectangle(New SolidBrush(Color.DarkSlateGray), New Rectangle(CSng(19), CSng(49), 302, 17))
+        G.FillRectangle(New SolidBrush(Color.Yellow), New Rectangle(CSng(20), CSng(50), _Energy * 3, 15))
+        Dim font1 As Font = New Font("MS PGothic", 35, FontStyle.Bold, GraphicsUnit.Pixel)
+        Dim p As PointF = New PointF(40, 80)
+        G.DrawString(_Coin.ToString, font1, Brushes.White, p)
+        G.DrawImage(CType(coinimg, Image), 10, 80)
 
 
         'testing hit box for player

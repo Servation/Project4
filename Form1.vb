@@ -11,6 +11,7 @@
     Private counter As Integer = 0
     Private runMod As Integer = 10
     Private Gen As New Random
+    Private shopping As Boolean = False
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         DoubleBuffered = True
         Start()
@@ -42,56 +43,70 @@
             Zombies(i).Show(G)
             ZomHit(i).Show(G)
         Next
+        PlayerBuildCol(Shop.xBase, Shop.yBase, 64 * 2, 64 * 2)
         Hero.Show(G)
         Knife.Show(G)
         Shop.ShowTop(G)
     End Sub
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        If keysPressed.Contains(Keys.Space) And Hero.Energy > 10 Then
-            Hero.knifing = True
-        End If
-        If Hero.knifing = False Then
-            Movement()
-        Else
-            AttKnife()
-        End If
-        Running()
-        If counter Mod runMod = 0 And Hero.moving Then
-            Hero.Direction += 1
-            If Hero.Energy >= 0 And Hero.running Then
-                Hero.Energy -= 0.5
+        If Not shopping Then
+            If keysPressed.Contains(Keys.Space) And Hero.Energy > 10 Then
+                Hero.knifing = True
             End If
-        End If
-        If Hero.Energy < 100 And Not Hero.running Then
-            Hero.Energy += 0.1
-        End If
-        For i As Integer = 0 To logicalZombie
-            If CirSqrCollision(Zombies(i).cx, Zombies(i).cy, Zombies(i).cRadius, Hero.x, Hero.y, 61, 64) Then
-                If zomTB(i) And zomLR(i) Then
-                    If Not Zombies(i).moving Then
-                        Zombies(i).isAtk = True
-                        zomAtk(i)
-                    End If
-                Else
-                    Zombies(i).isAtk = False
-                End If
-                Zombies(i).timer -= 1
+            If Hero.knifing = False Then
+                Movement()
             Else
-                ZombieAI(i)
-
+                AttKnife()
             End If
-            If counter Mod 10 = 0 And Zombies(i).moving Then
-                Zombies(i).Direction += 1
+            Running()
+            If counter Mod runMod = 0 And Hero.moving Then
+                Hero.Direction += 1
+                If Hero.Energy >= 0 And Hero.running Then
+                    Hero.Energy -= 0.5
+                End If
             End If
-            Zombies(i).Update()
-        Next
+            If Hero.Energy < 100 And Not Hero.running Then
+                Hero.Energy += 0.1
+            End If
+            For i As Integer = 0 To logicalZombie
+                If CirSqrCollision(Zombies(i).cx, Zombies(i).cy, Zombies(i).cRadius, Hero.x, Hero.y, 61, 64) Then
+                    If zomTB(i) And zomLR(i) Then
+                        If Not Zombies(i).moving Then
+                            Zombies(i).isAtk = True
+                            zomAtk(i)
+                        End If
+                    Else
+                        Zombies(i).isAtk = False
+                    End If
+                    Zombies(i).timer -= 1
+                Else
+                    ZombieAI(i)
 
-        If counter Mod 500 = 0 And logicalZombie < Zombies.Count - 1 Then
-            logicalZombie += 1
+                End If
+                If counter Mod 10 = 0 And Zombies(i).moving Then
+                    Zombies(i).Direction += 1
+                End If
+                zomBuildingCol(i, Shop.xBase + 10, Shop.yBase, 64 * 2, 64 * 2)
+                Zombies(i).Update()
+            Next
+
+            If counter Mod 500 = 0 And logicalZombie < Zombies.Count - 1 Then
+                logicalZombie += 1
+            End If
+            counter += 1
+            Hero.Update()
+            If CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, Shop.xBase + 70, Shop.yBase + 128, 25, 10) Then
+                lblTest.Visible = True
+                If keysPressed.Contains(Keys.F) Then
+                    shopping = True
+                    shopPanel.Visible = True
+                End If
+            Else
+                lblTest.Visible = False
+            End If
         End If
-        counter += 1
-        Hero.Update()
-        Invalidate()
+
+            Invalidate()
     End Sub
     Private Sub Running()
         If keysPressed.Contains(Keys.ShiftKey) And Hero.Energy > 1 Then
@@ -107,35 +122,42 @@
             Zombies(i).timer = Gen.Next(5, 40)
             Zombies(i).directionTime = Gen.Next(0, 8)
         Else
-            Zombies(i).enemyAI(zomBuildingCol(i, Shop.xBase, Shop.yBase, 64 * 2, 64 * 2))
+            Zombies(i).enemyAI()
         End If
     End Sub
-    Private Function PlayerBuildCol(xb As Double, yb As Double, w As Double, h As Double) As Boolean
-        Return CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, xb, yb, w, h)
-    End Function
-    Private Function zomBuildingCol(i As Integer, xb As Double, yb As Double, w As Double, h As Double) As Boolean
-        If CirSqrCollision(Zombies(i).x + 15 + 14, Zombies(i).y + 45 + 14, 14, xb, yb, w, h) Then
-            If Zombies(i).directionTime = 0 Then
-                Zombies(i).speedX = 0
-                Zombies(i).x += 1
+    Private Sub PlayerBuildCol(xb As Double, yb As Double, w As Double, h As Double)
+        If CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, xb, yb, w, h) Then
+            If CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, xb + w - 1, yb, 1, h) Then
+                Hero.x = xb + w - 15
             End If
-            If Zombies(i).directionTime = 1 Then
-                Zombies(i).speedX = 0
-                Zombies(i).x -= 1
+            If CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, xb, yb, 1, h) Then
+                Hero.x = xb - 15 - 28
             End If
-            If Zombies(i).directionTime = 2 Then
-                Zombies(i).speedY = 0
-                Zombies(i).y += 1
+            If CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, xb, yb + h - 1, w, 1) Then
+                Hero.y = yb + h - 45
             End If
-            If Zombies(i).directionTime = 3 Then
-                Zombies(i).speedY = 0
-                Zombies(i).y -= 1
+            If CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, xb, yb, w, 1) Then
+                Hero.y = yb - 45 - 28
             End If
-            Return True
+
         End If
-        Return False
-    End Function
-    Private Function zomTB(i As Integer) As Boolean
+
+    End Sub
+    Private Sub zomBuildingCol(i As Integer, xb As Double, yb As Double, w As Double, h As Double)
+        If CirSqrCollision(Zombies(i).x + 15 + 14, Zombies(i).y + 45 + 14, 14, xb + w - 1, yb, 1, h) Then
+            Zombies(i).x = xb + w - 15
+        End If
+        If CirSqrCollision(Zombies(i).x + 15 + 14, Zombies(i).y + 45 + 14, 14, xb, yb, 1, h) Then
+            Zombies(i).x = xb - 15 - 28
+        End If
+        If CirSqrCollision(Zombies(i).x + 15 + 14, Zombies(i).y + 45 + 14, 14, xb, yb + h - 1, w, 1) Then
+            Zombies(i).y = yb + h - 45
+        End If
+        If CirSqrCollision(Zombies(i).x + 15 + 14, Zombies(i).y + 45 + 14, 14, xb, yb, w, 1) Then
+            Zombies(i).y = yb - 45 - 28
+        End If
+    End Sub
+    Private Function zomLR(i As Integer) As Boolean
         If Zombies(i).cx > Hero.x + 61 And Zombies(i).speedX > -Zombies(i).maxSpeed Then
             Zombies(i).speedX -= 1
             Zombies(i).moving = True
@@ -147,7 +169,7 @@
         End If
         Return True
     End Function
-    Private Function zomLR(i As Integer) As Boolean
+    Private Function zomTB(i As Integer) As Boolean
         If Zombies(i).cy > Hero.y + 64 And Zombies(i).speedY > -Zombies(i).maxSpeed Then
             Zombies(i).speedY -= 1
             Zombies(i).moving = True
@@ -210,46 +232,26 @@
 
     Private Sub Movement()
         If keysPressed.Contains(Keys.A) And Hero.speedX > -Hero.maxSpeed And Not keysPressed.Contains(Keys.D) Then
-            If PlayerBuildCol(Shop.xBase, Shop.yBase, 64 * 2, 64 * 2) And Hero.x > Shop.xBase Then
-                Hero.speedX = 0
-                Hero.x += 1
-            Else
-                Hero.speedX -= 1
-                Hero.moving = True
-                Knife.direction = 2
-            End If
 
+            Hero.speedX -= 1
+                Hero.moving = True
+            Knife.direction = 2
         End If
         If keysPressed.Contains(Keys.D) And Hero.speedX < Hero.maxSpeed And Not keysPressed.Contains(Keys.A) Then
-            If PlayerBuildCol(Shop.xBase, Shop.yBase, 64 * 2, 64 * 2) And Hero.x < Shop.xBase Then
-                Hero.speedX = 0
-                Hero.x -= 1
-            Else
-                Hero.speedX += 1
-                Hero.moving = True
-                Knife.direction = 3
-            End If
+            Hero.speedX += 1
+            Hero.moving = True
+            Knife.direction = 3
         End If
         If keysPressed.Contains(Keys.W) And Hero.speedY > -Hero.maxSpeed And Not keysPressed.Contains(Keys.S) Then
-            If PlayerBuildCol(Shop.xBase, Shop.yBase, 64 * 2, 64 * 2) And Hero.y > Shop.yBase Then
-                Hero.speedY = 0
-                Hero.y += 1
-            Else
-                Hero.speedY -= 1
-                Hero.moving = True
-            End If
+            Hero.speedY -= 1
+            Hero.moving = True
             If Not (keysPressed.Contains(Keys.A) Or keysPressed.Contains(Keys.D)) Then
                 Knife.direction = 0
             End If
         End If
         If keysPressed.Contains(Keys.S) And Hero.speedY < Hero.maxSpeed And Not keysPressed.Contains(Keys.W) Then
-            If PlayerBuildCol(Shop.xBase, Shop.yBase, 64 * 2, 64 * 2) And Hero.y < Shop.yBase Then
-                Hero.speedY = 0
-                Hero.y -= 1
-            Else
-                Hero.speedY += 1
-                Hero.moving = True
-            End If
+            Hero.speedY += 1
+            Hero.moving = True
             If Not (keysPressed.Contains(Keys.A) Or keysPressed.Contains(Keys.D)) Then
                 Knife.direction = 1
             End If
@@ -287,5 +289,11 @@
 
     Private Sub Form1_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
         keysPressed.Remove(e.KeyCode)
+    End Sub
+
+    Private Sub btnLeave_Click(sender As Object, e As EventArgs) Handles btnLeave.Click
+        shopping = False
+        shopPanel.Visible = False
+        lblTest.Visible = False
     End Sub
 End Class
