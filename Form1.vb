@@ -251,7 +251,7 @@
         If keysPressed.Contains(Keys.A) And Hero.speedX > -Hero.maxSpeed And Not keysPressed.Contains(Keys.D) Then
 
             Hero.speedX -= 1
-                Hero.moving = True
+            Hero.moving = True
             Knife.direction = 2
         End If
         If keysPressed.Contains(Keys.D) And Hero.speedX < Hero.maxSpeed And Not keysPressed.Contains(Keys.A) Then
