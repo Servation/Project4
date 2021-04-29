@@ -100,6 +100,7 @@
     </Compile>
     <Compile Include="Player.vb" />
     <Compile Include="Projectile.vb" />
+    <Compile Include="shop.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form1.resx">
