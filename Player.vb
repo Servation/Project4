@@ -12,6 +12,7 @@
     Public Property sMultiplier As Double
     Public Property Health As Decimal
     Public Property Energy As Decimal
+    Public Property EnergyReg As Decimal
     Public Property Collision As Boolean
     Public Property Coin As Integer
     Private direct As Integer
@@ -37,6 +38,7 @@
         Direction = 18
         _Health = 100
         _Energy = 100
+        _EnergyReg = 0.1
         _Coin = 50
         _sMultiplier = 1
         _Collision = False

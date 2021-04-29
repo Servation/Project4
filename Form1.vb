@@ -69,7 +69,7 @@
                 End If
             End If
             If Hero.Energy < 100 And Not Hero.running Then
-                Hero.Energy += 0.1
+                Hero.Energy += Hero.EnergyReg
             End If
             For i As Integer = 0 To logicalZombie
                 If CirSqrCollision(Zombies(i).cx, Zombies(i).cy, Zombies(i).cRadius, Hero.x, Hero.y, 61, 64) Then
