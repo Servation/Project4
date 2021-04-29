@@ -47,6 +47,8 @@ Partial Class Form1
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.lblTest = New System.Windows.Forms.Label()
+        Me.lblGameOver = New System.Windows.Forms.Label()
+        Me.btnStart = New System.Windows.Forms.Label()
         Me.shopPanel.SuspendLayout()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -368,6 +370,32 @@ Partial Class Form1
         Me.lblTest.Size = New System.Drawing.Size(175, 25)
         Me.lblTest.TabIndex = 1
         Me.lblTest.Text = "Press 'F' to Enter"
+        Me.lblTest.Visible = False
+        '
+        'lblGameOver
+        '
+        Me.lblGameOver.AutoSize = True
+        Me.lblGameOver.BackColor = System.Drawing.Color.Transparent
+        Me.lblGameOver.Font = New System.Drawing.Font("Segoe UI", 48.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblGameOver.Location = New System.Drawing.Point(606, 437)
+        Me.lblGameOver.Name = "lblGameOver"
+        Me.lblGameOver.Size = New System.Drawing.Size(372, 86)
+        Me.lblGameOver.TabIndex = 2
+        Me.lblGameOver.Text = "Game Over"
+        Me.lblGameOver.Visible = False
+        '
+        'btnStart
+        '
+        Me.btnStart.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom), System.Windows.Forms.AnchorStyles)
+        Me.btnStart.BackColor = System.Drawing.Color.Black
+        Me.btnStart.Font = New System.Drawing.Font("Segoe UI Semibold", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnStart.ForeColor = System.Drawing.Color.White
+        Me.btnStart.Location = New System.Drawing.Point(708, 764)
+        Me.btnStart.Name = "btnStart"
+        Me.btnStart.Size = New System.Drawing.Size(169, 65)
+        Me.btnStart.TabIndex = 3
+        Me.btnStart.Text = "Start"
+        Me.btnStart.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Form1
         '
@@ -375,15 +403,17 @@ Partial Class Form1
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackgroundImage = Global.Project4.My.Resources.Resources.grass
         Me.ClientSize = New System.Drawing.Size(1584, 961)
+        Me.Controls.Add(Me.btnStart)
         Me.Controls.Add(Me.lblTest)
         Me.Controls.Add(Me.shopPanel)
+        Me.Controls.Add(Me.lblGameOver)
         Me.MaximizeBox = False
         Me.MaximumSize = New System.Drawing.Size(1600, 1000)
         Me.MinimizeBox = False
         Me.MinimumSize = New System.Drawing.Size(1600, 1000)
         Me.Name = "Form1"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Form1"
+        Me.Text = "Zombies"
         Me.shopPanel.ResumeLayout(False)
         Me.shopPanel.PerformLayout()
         CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
@@ -418,4 +448,6 @@ Partial Class Form1
     Friend WithEvents lblEnergyQty As Label
     Friend WithEvents lblHealQty As Label
     Friend WithEvents lblStrQty As Label
+    Friend WithEvents lblGameOver As Label
+    Friend WithEvents btnStart As Label
 End Class

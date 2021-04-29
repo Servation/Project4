@@ -12,9 +12,9 @@
     Private runMod As Integer = 10
     Private Gen As New Random
     Private shopping As Boolean = False
+    Private GameStart As Boolean = False
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         DoubleBuffered = True
-        Start()
     End Sub
     Private Sub Start()
         MainRect = DisplayRectangle
@@ -38,78 +38,92 @@
     Private Sub Form1_Paint(sender As Object, e As PaintEventArgs) Handles Me.Paint
         Dim G As Graphics = e.Graphics
         G.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-        Shop.ShowMain(G)
-        For i As Integer = 0 To logicalZombie
-            Zombies(i).Show(G)
-            ZomHit(i).Show(G)
-        Next
-        PlayerBuildCol(Shop.xBase, Shop.yBase, 64 * 2, 64 * 2)
-        If Not shopping Then
-            Hero.Show(G)
-            Knife.Show(G)
-            Shop.ShowTop(G)
+        If GameStart Then
+            If Hero.Health > 0 Then
+                Shop.ShowMain(G)
+                For i As Integer = 0 To logicalZombie
+                    Zombies(i).Show(G)
+                    ZomHit(i).Show(G)
+                Next
+                PlayerBuildCol(Shop.xBase, Shop.yBase, 64 * 2, 64 * 2)
+                If Not shopping Then
+                    Hero.Show(G)
+                    Knife.Show(G)
+                    Shop.ShowTop(G)
+                End If
+            End If
         End If
-
     End Sub
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        If Not shopping Then
-            If keysPressed.Contains(Keys.Space) And Hero.Energy > 10 Then
-                Hero.knifing = True
-            End If
-            If Hero.knifing = False Then
-                Movement()
-            Else
-                AttKnife()
-            End If
-            Running()
-            If counter Mod runMod = 0 And Hero.moving Then
-                Hero.Direction += 1
-                If Hero.Energy >= 0 And Hero.running Then
-                    Hero.Energy -= 0.5
-                End If
-            End If
-            If Hero.Energy < 100 And Not Hero.running Then
-                Hero.Energy += Hero.EnergyReg
-            End If
-            For i As Integer = 0 To logicalZombie
-                If CirSqrCollision(Zombies(i).cx, Zombies(i).cy, Zombies(i).cRadius, Hero.x, Hero.y, 61, 64) Then
-                    If zomTB(i) And zomLR(i) Then
-                        If Not Zombies(i).moving Then
-                            Zombies(i).isAtk = True
-                            zomAtk(i)
+        If GameStart Then
+            If Hero.Health > 0 Then
+
+                If Not shopping Then
+                    If keysPressed.Contains(Keys.Space) And Hero.Energy > 10 Then
+                        Hero.knifing = True
+                    End If
+                    If Hero.knifing = False Then
+                        Movement()
+                    Else
+                        AttKnife()
+                    End If
+                    Running()
+                    If counter Mod runMod = 0 And Hero.moving Then
+                        Hero.Direction += 1
+                        If Hero.Energy >= 0 And Hero.running Then
+                            Hero.Energy -= 0.5
+                        End If
+                    End If
+                    If Hero.Energy < 100 And Not Hero.running Then
+                        Hero.Energy += Hero.EnergyReg
+                    End If
+                    For i As Integer = 0 To logicalZombie
+                        If CirSqrCollision(Zombies(i).cx, Zombies(i).cy, Zombies(i).cRadius, Hero.x, Hero.y, 61, 64) Then
+                            If zomTB(i) And zomLR(i) Then
+                                If Not Zombies(i).moving Then
+                                    Zombies(i).isAtk = True
+                                    zomAtk(i)
+                                End If
+                            Else
+                                Zombies(i).isAtk = False
+                            End If
+                            Zombies(i).timer -= 1
+                        Else
+                            ZombieAI(i)
+
+                        End If
+                        If counter Mod 10 = 0 And Zombies(i).moving Then
+                            Zombies(i).Direction += 1
+                        End If
+                        zomBuildingCol(i, Shop.xBase + 10, Shop.yBase, 64 * 2, 64 * 2)
+                        Zombies(i).Update()
+                    Next
+
+                    If counter Mod 500 = 0 And logicalZombie < Zombies.Count - 1 Then
+                        logicalZombie += 1
+                    End If
+                    counter += 1
+                    Hero.Update()
+                    If CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, Shop.xBase + 70, Shop.yBase + 128, 25, 10) Then
+                        lblTest.Visible = True
+                        If keysPressed.Contains(Keys.F) Then
+                            shopping = True
+                            shopPanel.Visible = True
                         End If
                     Else
-                        Zombies(i).isAtk = False
+                        lblTest.Visible = False
                     End If
-                    Zombies(i).timer -= 1
-                Else
-                    ZombieAI(i)
-
                 End If
-                If counter Mod 10 = 0 And Zombies(i).moving Then
-                    Zombies(i).Direction += 1
-                End If
-                zomBuildingCol(i, Shop.xBase + 10, Shop.yBase, 64 * 2, 64 * 2)
-                Zombies(i).Update()
-            Next
-
-            If counter Mod 500 = 0 And logicalZombie < Zombies.Count - 1 Then
-                logicalZombie += 1
-            End If
-            counter += 1
-            Hero.Update()
-            If CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, Shop.xBase + 70, Shop.yBase + 128, 25, 10) Then
-                lblTest.Visible = True
-                If keysPressed.Contains(Keys.F) Then
-                    shopping = True
-                    shopPanel.Visible = True
-                End If
+                lblCoins.Text = Hero.Coin
             Else
-                lblTest.Visible = False
+                lblGameOver.Visible = True
+                btnStart.Visible = True
+                btnStart.Text = "Restart"
             End If
         End If
-        lblCoins.Text = Hero.Coin
+
         Invalidate()
+
     End Sub
     Private Sub Running()
         If keysPressed.Contains(Keys.ShiftKey) And Hero.Energy > 1 Then
@@ -300,4 +314,10 @@
         lblTest.Visible = False
     End Sub
 
+    Private Sub btnStart_Click(sender As Object, e As EventArgs) Handles btnStart.Click
+        GameStart = True
+        Start()
+        lblGameOver.Visible = False
+        btnStart.Visible = False
+    End Sub
 End Class
