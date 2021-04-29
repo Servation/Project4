@@ -299,4 +299,5 @@
         shopPanel.Visible = False
         lblTest.Visible = False
     End Sub
+
 End Class
