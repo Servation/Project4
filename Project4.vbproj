@@ -101,6 +101,11 @@
     <Compile Include="Player.vb" />
     <Compile Include="Projectile.vb" />
     <Compile Include="shop.vb" />
+    <Compile Include="ShopItemsDataSet.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ShopItemsDataSet.xsd</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form1.resx">
@@ -124,6 +129,17 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
+    <None Include="ShopItemsDataSet.xsc">
+      <DependentUpon>ShopItemsDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="ShopItemsDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ShopItemsDataSet.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ShopItemsDataSet.xss">
+      <DependentUpon>ShopItemsDataSet.xsd</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\grass.png" />
@@ -178,6 +194,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\icons8-lightning-bolt-80.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ShopItems.mdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

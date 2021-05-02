@@ -5,7 +5,7 @@
     Private Zombies(allZomb) As Enemy
     Private ZomHit(allZomb) As Attack
     Private Knife As Attack
-    Private Shop As Building
+    Private ShopBuilding As Building
     Private logicalZombie As Integer = 0
     Private keysPressed As New HashSet(Of Keys)
     Private counter As Integer = 0
@@ -13,6 +13,7 @@
     Private Gen As New Random
     Private shopping As Boolean = False
     Private GameStart As Boolean = False
+    Private ShopItems(2) As shop
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         DoubleBuffered = True
     End Sub
@@ -33,23 +34,33 @@
             ZomHit(i) = New Attack(MainRect)
         Next
         Knife = New Attack(MainRect)
-        Shop = New Building(MainRect, 800, 230, 0)
+        ShopBuilding = New Building(MainRect, 800, 230, 0)
+        ShopItems(0) = New shop("strPlus")
+        lblStrQty.Text = ShopItems(0).Quantity
+        lblStrPrice.Text = ShopItems(0).Price
+        ShopItems(1) = New shop("fullHeal")
+        lblHealQty.Text = ShopItems(1).Quantity
+        lblHealPrice.Text = ShopItems(1).Price
+        ShopItems(2) = New shop("EnergyRen")
+        lblEnergyQty.Text = ShopItems(2).Quantity
+        lblEnergyPrice.Text = ShopItems(2).Price
+
     End Sub
     Private Sub Form1_Paint(sender As Object, e As PaintEventArgs) Handles Me.Paint
         Dim G As Graphics = e.Graphics
         G.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
         If GameStart Then
             If Hero.Health > 0 Then
-                Shop.ShowMain(G)
+                ShopBuilding.ShowMain(G)
                 For i As Integer = 0 To logicalZombie
                     Zombies(i).Show(G)
                     ZomHit(i).Show(G)
                 Next
-                PlayerBuildCol(Shop.xBase, Shop.yBase, 64 * 2, 64 * 2)
+                PlayerBuildCol(ShopBuilding.xBase, ShopBuilding.yBase, 64 * 2, 64 * 2)
                 If Not shopping Then
                     Hero.Show(G)
                     Knife.Show(G)
-                    Shop.ShowTop(G)
+                    ShopBuilding.ShowTop(G)
                 End If
             End If
         End If
@@ -95,7 +106,7 @@
                         If counter Mod 10 = 0 And Zombies(i).moving Then
                             Zombies(i).Direction += 1
                         End If
-                        zomBuildingCol(i, Shop.xBase + 10, Shop.yBase, 64 * 2, 64 * 2)
+                        zomBuildingCol(i, ShopBuilding.xBase + 10, ShopBuilding.yBase, 64 * 2, 64 * 2)
                         Zombies(i).Update()
                     Next
 
@@ -104,7 +115,7 @@
                     End If
                     counter += 1
                     Hero.Update()
-                    If CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, Shop.xBase + 70, Shop.yBase + 128, 25, 10) Then
+                    If CirSqrCollision(Hero.x + 15 + 14, Hero.y + 45 + 14, 14, ShopBuilding.xBase + 70, ShopBuilding.yBase + 128, 25, 10) Then
                         lblTest.Visible = True
                         If keysPressed.Contains(Keys.F) Then
                             shopping = True
@@ -319,5 +330,41 @@
         Start()
         lblGameOver.Visible = False
         btnStart.Visible = False
+    End Sub
+
+    Private Sub btnStr_Click(sender As Object, e As EventArgs) Handles btnStr.Click
+        If ShopItems(0).Quantity > 0 And Hero.Coin >= ShopItems(0).Price Then
+            ShopItems(0).Buy()
+            lblStrQty.Text = ShopItems(0).Quantity
+            Hero.Coin -= ShopItems(0).Price
+            Hero.sMultiplier += 0.25
+        End If
+        If ShopItems(0).Quantity = 0 Then
+            lblStrQty.ForeColor = Color.Red
+        End If
+    End Sub
+
+    Private Sub btnHeal_Click(sender As Object, e As EventArgs) Handles btnHeal.Click
+        If ShopItems(1).Quantity > 0 And Hero.Coin >= ShopItems(1).Price Then
+            ShopItems(1).Buy()
+            lblHealQty.Text = ShopItems(1).Quantity
+            Hero.Coin -= ShopItems(1).Price
+            Hero.Health = 100
+        End If
+        If ShopItems(1).Quantity = 0 Then
+            lblHealQty.ForeColor = Color.Red
+        End If
+    End Sub
+
+    Private Sub btnEnergy_Click(sender As Object, e As EventArgs) Handles btnEnergy.Click
+        If ShopItems(2).Quantity > 0 And Hero.Coin >= ShopItems(2).Price Then
+            ShopItems(2).Buy()
+            lblEnergyQty.Text = ShopItems(2).Quantity
+            Hero.Coin -= ShopItems(2).Price
+            Hero.EnergyReg += 0.02
+        End If
+        If ShopItems(2).Quantity = 0 Then
+            lblEnergyQty.ForeColor = Color.Red
+        End If
     End Sub
 End Class
