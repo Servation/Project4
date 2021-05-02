@@ -33,7 +33,7 @@
         Me.MainRect = MainRect
         _x = randX
         _y = randY
-        _maxSpeed = 1.7
+        _maxSpeed = 2
         Direction = 18
         _moving = False
         _Health = 100

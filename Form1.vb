@@ -6,7 +6,7 @@
     Private ZomHit(allZomb) As Attack
     Private Knife As Attack
     Private ShopBuilding As Building
-    Private logicalZombie As Integer = 0
+    Private logicalZombie As Integer = 3
     Private keysPressed As New HashSet(Of Keys)
     Private counter As Integer = 0
     Private runMod As Integer = 10
