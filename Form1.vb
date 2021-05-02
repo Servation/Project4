@@ -1,7 +1,7 @@
 ﻿Public Class Form1
     Private MainRect As Rectangle
     Private Hero As Player
-    Private allZomb As Integer = 40
+    Private allZomb As Integer = 100
     Private Zombies(allZomb) As Enemy
     Private ZomHit(allZomb) As Attack
     Private Knife As Attack
@@ -110,7 +110,7 @@
                         Zombies(i).Update()
                     Next
 
-                    If counter Mod 500 = 0 And logicalZombie < Zombies.Count - 1 Then
+                    If counter Mod 200 = 0 And logicalZombie < Zombies.Count - 1 Then
                         logicalZombie += 1
                     End If
                     counter += 1
@@ -129,7 +129,7 @@
             Else
                 lblGameOver.Visible = True
                 btnStart.Visible = True
-                btnStart.Text = "Restart"
+                btnStart.Text = "EXIT"
             End If
         End If
 
@@ -326,10 +326,15 @@
     End Sub
 
     Private Sub btnStart_Click(sender As Object, e As EventArgs) Handles btnStart.Click
-        GameStart = True
-        Start()
-        lblGameOver.Visible = False
-        btnStart.Visible = False
+        If lblGameOver.Visible = False Then
+            GameStart = True
+            Start()
+            lblGameOver.Visible = False
+            btnStart.Visible = False
+        Else
+            Me.Close()
+        End If
+
     End Sub
 
     Private Sub btnStr_Click(sender As Object, e As EventArgs) Handles btnStr.Click
