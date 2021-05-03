@@ -81,6 +81,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        '''</summary>
+        Friend ReadOnly Property button() As System.IO.UnmanagedMemoryStream
+            Get
+                Return ResourceManager.GetStream("button", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property coin() As System.Drawing.Bitmap
@@ -147,6 +156,15 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("insideShop", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        '''</summary>
+        Friend ReadOnly Property knife() As System.IO.UnmanagedMemoryStream
+            Get
+                Return ResourceManager.GetStream("knife", resourceCulture)
             End Get
         End Property
         
@@ -237,6 +255,15 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("zombie", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        '''</summary>
+        Friend ReadOnly Property zombie1() As System.IO.UnmanagedMemoryStream
+            Get
+                Return ResourceManager.GetStream("zombie1", resourceCulture)
             End Get
         End Property
     End Module

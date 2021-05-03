@@ -14,8 +14,14 @@
     Private shopping As Boolean = False
     Private GameStart As Boolean = False
     Private ShopItems(2) As shop
+
+    Private Declare Function mciSendString Lib "winmm.dll" Alias "mciSendStringA" _
+    (ByVal lpstrCommand As String, ByVal lpstrReturnString As String,
+    ByVal uReturnLength As Integer, ByVal hwndCallback As Integer) As Integer
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         DoubleBuffered = True
+        CopyResourceToDisk()
     End Sub
     Private Sub Start()
         MainRect = DisplayRectangle
@@ -72,6 +78,7 @@
                 If Not shopping Then
                     If keysPressed.Contains(Keys.Space) And Hero.Energy > 10 Then
                         Hero.knifing = True
+                        PlaySound("knife.wav")
                     End If
                     If Hero.knifing = False Then
                         Movement()
@@ -89,7 +96,12 @@
                         Hero.Energy += Hero.EnergyReg
                     End If
                     For i As Integer = 0 To logicalZombie
-                        If CirSqrCollision(Zombies(i).cx, Zombies(i).cy, Zombies(i).cRadius, Hero.x, Hero.y, 61, 64) Then
+                        If CirSqrCollision(Zombies(i).cx, Zombies(i).cy, Zombies(i).cRadius, Hero.x, Hero.y, 61, 64) And Zombies(i).visible = True Then
+                            If Zombies(i).playZomSound Then
+                                PlaySound("zombie.wav")
+                                Zombies(i).playZomSound = False
+                            End If
+
                             If zomTB(i) And zomLR(i) Then
                                 If Not Zombies(i).moving Then
                                     Zombies(i).isAtk = True
@@ -101,7 +113,7 @@
                             Zombies(i).timer -= 1
                         Else
                             ZombieAI(i)
-
+                            Zombies(i).playZomSound = True
                         End If
                         If counter Mod 10 = 0 And Zombies(i).moving Then
                             Zombies(i).Direction += 1
@@ -233,7 +245,7 @@
         End If
         If Knife.atkseq > 5 Then
             For i As Integer = 0 To logicalZombie
-                If RectsCollision(Knife.xStart, Knife.yStart, Knife.Width, Knife.Height, Zombies(i).x, Zombies(i).y, Zombies(i).Width, Zombies(i).Height) Then
+                If RectsCollision(Knife.xStart, Knife.yStart, Knife.Width, Knife.Height, Zombies(i).x, Zombies(i).y, Zombies(i).Width, Zombies(i).Height) And Zombies(i).visible Then
                     Zombies(i).Health -= Knife.dmg * Hero.sMultiplier
                     Select Case Knife.direction
                         Case 0
@@ -246,8 +258,7 @@
                             Zombies(i).speedX += 12
                     End Select
                     If Zombies(i).Health <= 0 Then
-                        Hero.Coin = If(Zombies(i).visible, Gen.Next(5, 30) + Hero.Coin, Hero.Coin)
-                        Hero.Coin = If(Hero.Coin > 999, 999, Hero.Coin)
+                        Hero.Coin += Gen.Next(5, 30)
                         Zombies(i).visible = False
                     End If
                 End If
@@ -320,12 +331,14 @@
     End Sub
 
     Private Sub btnLeave_Click(sender As Object, e As EventArgs) Handles btnLeave.Click
+        PlaySound("button.wav")
         shopping = False
         shopPanel.Visible = False
         lblTest.Visible = False
     End Sub
 
     Private Sub btnStart_Click(sender As Object, e As EventArgs) Handles btnStart.Click
+        PlaySound("button.wav")
         If lblGameOver.Visible = False Then
             GameStart = True
             Start()
@@ -339,6 +352,7 @@
 
     Private Sub btnStr_Click(sender As Object, e As EventArgs) Handles btnStr.Click
         If ShopItems(0).Quantity > 0 And Hero.Coin >= ShopItems(0).Price Then
+            PlaySound("button.wav")
             ShopItems(0).Buy()
             lblStrQty.Text = ShopItems(0).Quantity
             Hero.Coin -= ShopItems(0).Price
@@ -351,6 +365,7 @@
 
     Private Sub btnHeal_Click(sender As Object, e As EventArgs) Handles btnHeal.Click
         If ShopItems(1).Quantity > 0 And Hero.Coin >= ShopItems(1).Price Then
+            PlaySound("button.wav")
             ShopItems(1).Buy()
             lblHealQty.Text = ShopItems(1).Quantity
             Hero.Coin -= ShopItems(1).Price
@@ -363,6 +378,7 @@
 
     Private Sub btnEnergy_Click(sender As Object, e As EventArgs) Handles btnEnergy.Click
         If ShopItems(2).Quantity > 0 And Hero.Coin >= ShopItems(2).Price Then
+            PlaySound("button.wav")
             ShopItems(2).Buy()
             lblEnergyQty.Text = ShopItems(2).Quantity
             Hero.Coin -= ShopItems(2).Price
@@ -370,6 +386,38 @@
         End If
         If ShopItems(2).Quantity = 0 Then
             lblEnergyQty.ForeColor = Color.Red
+        End If
+    End Sub
+    Private Sub PlaySound(s As String)
+        Try
+            mciSendString("close myWAV" & s, Nothing, 0, 0)
+
+            Dim fileName1 As String = s
+            mciSendString("open " & ChrW(34) & fileName1 & ChrW(34) & " type mpegvideo alias myWAV" & s, Nothing, 0, 0)
+            mciSendString("play myWAV" & s, Nothing, 0, 0)
+
+            Dim Volume As Integer = 400
+            mciSendString("setaudio myWAV" & s & " volume to " & Volume.ToString, Nothing, 0, 0)
+
+        Catch ex As Exception
+            Me.Text = ex.Message
+        End Try
+    End Sub
+    Private Sub CopyResourceToDisk()
+        If Not IO.File.Exists("button.wav") Then
+            Dim bts(CInt(My.Resources.button.Length - 1)) As Byte
+            My.Resources.button.Read(bts, 0, bts.Length)
+            IO.File.WriteAllBytes("button.wav", bts)
+        End If
+        If Not IO.File.Exists("knife.wav") Then
+            Dim bts(CInt(My.Resources.knife.Length - 1)) As Byte
+            My.Resources.knife.Read(bts, 0, bts.Length)
+            IO.File.WriteAllBytes("knife.wav", bts)
+        End If
+        If Not IO.File.Exists("zombie.wav") Then
+            Dim bts(CInt(My.Resources.zombie1.Length - 1)) As Byte
+            My.Resources.zombie1.Read(bts, 0, bts.Length)
+            IO.File.WriteAllBytes("zombie.wav", bts)
         End If
     End Sub
 End Class

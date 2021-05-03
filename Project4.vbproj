@@ -196,6 +196,9 @@
     <None Include="Resources\icons8-lightning-bolt-80.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\568169__merrick079__sword-sound-2.wav" />
+    <None Include="Resources\Restart.wav" />
+    <None Include="Resources\zombie.wav" />
     <Content Include="ShopItems.mdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -14,6 +14,7 @@
     Public Property cx As Double
     Public Property cy As Double
     Public Property cRadius As Double
+    Public Property playZomSound As Boolean
     Private direct As Integer
     Public ReadOnly Property Width As Double = 34
     Public ReadOnly Property Height As Double = 64
@@ -33,6 +34,7 @@
         Me.MainRect = MainRect
         _x = randX
         _y = randY
+        _playZomSound = True
         _maxSpeed = 2
         Direction = 18
         _moving = False
