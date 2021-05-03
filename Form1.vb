@@ -21,6 +21,7 @@
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         DoubleBuffered = True
+        Start()
         CopyResourceToDisk()
     End Sub
     Private Sub Start()
@@ -341,7 +342,7 @@
         PlaySound("button.wav")
         If lblGameOver.Visible = False Then
             GameStart = True
-            Start()
+
             lblGameOver.Visible = False
             btnStart.Visible = False
         Else
